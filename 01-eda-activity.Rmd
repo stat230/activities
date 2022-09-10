@@ -1,0 +1,59 @@
+---
+title: "EDA Using R/RStudio"
+author: "Stat 230"
+output:
+  html_document:
+    code_download: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#### Instructions
+
+1. Work through the [EDA examples in the R manual](https://stat230.github.io/r-manual-kuiper/01-eda.html)
+
+2. Explore the `HELPrct` data set to try to find some interesting insights. 
+You can find details (variable names, etc.) about the data set in the [online codebook](https://www.rdocumentation.org/packages/mosaicData/versions/0.20.2/topics/HELPrct). Explore the data set using plots, tables, and other numeric summaries. 
+Select three of your favorite plots and tell a story (in writing) about each of them. 
+
+Be sure to include this code chunk so that the data and necessary R packages
+are available in this document.
+
+```{r message=FALSE}
+# load the data set from the url
+HELPrct <- read.csv("https://aloy.rbind.io/data/HELPrct.csv")
+
+# loading the necessary packages
+library(ggformula)
+library(mosaic)
+```
+
+Feel free to add code chunks below as you work through the R Manual, but remember that
+your goal is to create three plots that tell a story.
+
+
+## PLOT 1
+
+```{r}
+# put the code for your plot here
+```
+
+(Include the description for your plot here.)
+
+
+## PLOT 2
+
+```{r}
+# put the code for your plot here
+```
+(Include the description for your plot here.)
+
+
+## PLOT 3
+
+```{r}
+# put the code for your plot here
+```
+(Include the description for your plot here.)
