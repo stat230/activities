@@ -1,12 +1,17 @@
 ---
 title: "Models to Compare Two Population Means"
-theme: sandstone
-format: html
+format:
+  pdf:
+    geometry:
+      - top=1in
+      - left=1in
+      - right=1in
+      - bottom=1in
 ---
 
 <!-- # Overview of R Markdown files -->
 
-In this class, you will work with your group to explore how to fit and interpret models to compare two population means. 
+In this class, you will work with your group to explore how to fit and interpret models to compare two population means. While you work through this activity, make sure that all group members are engage and contribute ideas and follow the code.
 
 ## Part 1: Understanding the study design
 
@@ -25,7 +30,7 @@ $$y_{ij} = \mu_i + \varepsilon_{ij}, \quad \text{ for } i=1,2, \quad j = 1,\ldot
 
 Let group 1 be the color distractor group and group 2 be the standard game group.
 
-**Task 2.** Calculate estimates for the two population means.
+**Task 2.** Calculate estimates for the two population means. To do this, think back to the EDA activity from Monday.
 
 
 ## Part 3: Checking assumptions
@@ -63,5 +68,38 @@ In addition to graphically checking whether the spread of the residuals is simil
 You book recommends that $\max(s_1^2, s_2^2)/\min(s_1^2, s_2^2) < 2$, but this is not a strict rule.
 
 
-**Task 3:** Complete activities 7-10.
+**Task 3:** Complete activities 7-10. The R Manual has useful code.
+
+
+## Part 4: Fitting a regression model to compare means
+
+As you learned in preparation for this class, a simple linear regression model can be used in place of the two-sample procedure you just considered. The regression model will be of the form
+
+$$y_i = \beta_0 + \beta_1 x_i + \varepsilon_i, \quad \text{ for } i=1,2, \ldots, n \quad \text{where } \varepsilon_{i} \sim \mathcal{N}(0, \sigma^2)$$
+Recall further that $x_i$ will need to be an **indicator variable**.
+
+**Task 4:** Complete activities 11-13. The R Manual has useful code.
+
+
+## Part 5: Check the model 
+
+Before you can trust your inferential results, you should verify that the necessary assumptions/conditions are met. That is you need to check that
+
+1. the error terms are i.i.d.
+1. the error terms follow a normal distribution
+1. the error terms have mean 0
+1. the come from a single population with variance $\sigma^2$ (i.e., the variance doesn't depend on the value of $x_i$)
+
+Luckily, you can use the same graphical tools as you did for the two-sample model after you extract the residuals.
+
+**Task 5:** Complete activity 14.
+
+
+## Part 6: Communicate the results
+
+If your model seems adequate, then you should clearly communicate your findings. This can be in the form of a graphic, an equation, or a couple sentences.
+
+
+**Task 6:** Complete activity 15.
+
 
