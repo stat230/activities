@@ -3,15 +3,17 @@ title: "Models to Compare Two Population Means"
 format:
   pdf:
     geometry:
-      - top=1in
-      - left=1in
-      - right=1in
-      - bottom=1in
+      - top=.75in
+      - left=.75in
+      - right=.75in
+      - bottom=.75in
 ---
 
 <!-- # Overview of R Markdown files -->
 
 In this class, you will work with your group to explore how to fit and interpret models to compare two population means. While you work through this activity, make sure that all group members are engage and contribute ideas and follow the code.
+
+The [R Manual](https://stat230.github.io/r-manual-kuiper/02-chapter02.html) has useful R code for today's activities.
 
 ## Part 1: Understanding the study design
 
