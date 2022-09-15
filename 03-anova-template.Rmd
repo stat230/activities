@@ -1,0 +1,70 @@
+---
+title: "ANOVA: Comparing 3+ Population Means"
+date: "2022-09-16"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+```
+
+### 19.
+
+```{r calc-means}
+# Delete this comment and put your code here
+```
+
+Write your answer here...
+
+### 20.
+
+```{r effect-sizes}
+# Delete this comment and put your code here
+```
+
+Write your answer here...
+
+### 21.
+
+```{r main-effect-plot}
+# Delete this comment and put your code here
+```
+
+### 22.
+
+```{r resid20}
+# Delete this comment and put your code here
+```
+
+### 23.
+
+```{r run-anova}
+# Delete this comment and put your code here
+```
+
+Write your conclusion here...
+
+### 24.
+
+Write your comparison here...
+
+### 25.
+
+```{r sqrt-F}
+# Delete this comment and put your code here
+```
+
+Write your comparison here...
+
+### 26.
+
+```{r check-assumptions}
+# Delete this comment and put your code here
+```
+
+Write your interpretation of the diagnostic plots here...
+
+### 27.
+
+Write your comparison here...
