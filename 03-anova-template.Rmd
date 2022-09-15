@@ -7,6 +7,12 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 
+# Load the require R packages in this setup chunk
+library(ggformula)
+library(mosaic)
+
+# Load the data set in the set up chunk
+games1 <- read.csv("https://aloy.rbind.io/kuiper_data/Games1.csv")
 ```
 
 ### 19.
