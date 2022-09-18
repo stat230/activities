@@ -1,0 +1,206 @@
+---
+title: "Model Diagnostics and Remedial Measures"
+date: "2022-09-19"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+# Load the require R packages in this setup chunk
+library(ggformula)
+library(mosaic)
+
+# Load the data set in the set up chunk
+games1 <- read.csv("https://aloy.rbind.io/kuiper_data/Games1.csv")
+```
+
+### Activity A
+
+#### a.
+
+Write your answer here...
+
+#### b.
+
+Write your answer here...
+
+#### c.
+
+Write your answer here...
+
+#### d.
+
+Write your answer here...
+
+#### e.
+
+Write your answer here...
+
+
+### Activity 29
+
+```{r}
+normal <- read.csv("https://aloy.rbind.io/kuiper_data/Normal.csv")
+```
+
+#### a.
+
+```{r 29a}
+# Delete this comment and put your code here
+```
+
+Write your answer here...
+
+
+#### b.
+
+```{r 29b}
+# Delete this comment and put your code here
+```
+
+Write your answer here...
+
+
+#### c.
+
+```{r 29c}
+# Delete this comment and put your code here
+```
+
+Write your answer here...
+
+
+### Exercise E.10
+
+#### a.
+
+```{r e10a}
+# Delete this comment and put your code here
+```
+
+Write your answer here...
+
+
+#### b.
+
+```{r e10b}
+# Delete this comment and put your code here
+```
+
+Write your answer here...
+
+
+#### c.
+
+```{r e10c}
+# Delete this comment and put your code here
+```
+
+Write your answer here...
+
+
+
+### Extended Activity 31
+
+```{r}
+emissions <- read.csv("https://aloy.rbind.io/kuiper_data/Emissions.csv")
+
+sub_emissions <- emissions |> 
+  filter(Year == "1963-1967" | Year == "1970-1971")
+```
+
+
+#### c.
+
+```{r 31c}
+# Delete this comment and put your code here
+```
+
+Write your answer here...
+
+
+
+#### d.
+
+```{r 31d}
+# Delete this comment and put your code here
+```
+
+Write your answer here...
+
+
+
+### Activity B
+
+```{r}
+y1 <- sub_emissions |> 
+  filter(Year == "1963-1967") |> 
+  pull(Emissions)
+y2 <- sub_emissions |> 
+  filter(Year == "1970-1971") |>
+  pull(Emissions)
+```
+
+#### a.
+
+```{r ActB-a}
+# Delete this comment and put your code here
+```
+
+#### b.
+
+```{r ActB-b}
+# Delete this comment and put your code here
+```
+
+#### c.
+
+```{r ActB-c}
+# Delete this comment and put your code here
+```
+
+Write your answer here...
+
+#### d.
+
+```{r ActB-d}
+# Delete this comment and put your code here
+```
+
+Write your answer here...
+
+#### e.
+
+```{r ActB-e}
+# Delete this comment and put your code here
+```
+
+Write your answer here...
+
+#### f.
+
+Write your answer here...
+
+
+
+
+### Activity C
+
+#### Transforming y1
+
+```{r ActC-y1}
+# Delete this comment and put your code here
+```
+
+#### Transforming y2
+
+```{r ActC-y2}
+# Delete this comment and put your code here
+```
+
+#### Transforming y3
+
+```{r ActC-y3}
+# Delete this comment and put your code here
+```
