@@ -27,7 +27,7 @@ The [R Manual](https://stat230.github.io/r-manual-kuiper/02-chapter02.html) has 
 In the reading you learned how normal Q-Q plots are constructed and why they are useful. Today, we'll start off by creating a number of these plots to practice reading them. 
 
 
-**Activity A.** Go to  [https://loya.shinyapps.io/qqplots/](https://loya.shinyapps.io/qqplots/). This is a web app where you can generate a histogram and normal Q-Q plot for a variety of sample sizes and distributional shapes. Looking at multiple examples will help you develop your intuition about what constitute a substantial deviation from a straight line on a normal Q-Q plot. Do the following:
+**Activity A.** Go to  [https://shiny.mathcs.carleton.edu/users/aloy/qqnorm/](https://shiny.mathcs.carleton.edu/users/aloy/qqnorm/). This is a web app where you can generate a histogram and normal Q-Q plot for a variety of sample sizes and distributional shapes. Looking at multiple examples will help you develop your intuition about what constitute a substantial deviation from a straight line on a normal Q-Q plot. Do the following:
 
 (a) The default settings are a sample size of 15 observations drawn from a normal population distribution. Generate a few of these plots by pressing "Plot it!". Do the points always fall on the line? 
 
@@ -128,6 +128,14 @@ y2 <- sub_emissions |>
 (b) Compute the sample means and medians for the transformed samples, `log(y1)` and `log(y2)`.
 
 ```{r include=FALSE}
+mean(y1)
+median(y1)
+
+mean(y2)
+median(y2)
+
+log(mean(y1) - mean(y2))
+
 log(mean(y1) / mean(y2))
 mean(log(y1)) - mean(log(y2))
 
@@ -181,6 +189,45 @@ anova_trans <- data.frame(
   y3 = 1 - 2 * x + rnorm(n, mean = 0, sd = sigma * (1/x))
 )
 pairs(anova_trans)
+
+library(patchwork)
+
+aov1 <- aov(y1 ~ factor(x), data = anova_trans)
+gf_point(resid(aov1) ~ x, data = anova_trans) |>
+  gf_hline(yintercept = 0, color = "blue") +
+gf_qq(~resid(aov1), data = anova_trans) |> gf_qqline()
+
+
+aov2 <- aov(y2 ~ factor(x), data = anova_trans)
+gf_point(resid(aov2) ~ x, data = anova_trans) |>
+  gf_hline(yintercept = 0, color = "blue") +
+gf_qq(~resid(aov2), data = anova_trans) |> gf_qqline()
+
+aov2_log <- aov(sqrt(y2 + 8) ~ factor(x), data = anova_trans)
+gf_point(resid(aov2_log) ~ x, data = anova_trans) |>
+  gf_hline(yintercept = 0, color = "blue") +
+gf_qq(~resid(aov2_log), data = anova_trans) |> gf_qqline()
+
+
+
+aov3 <- aov(y3 ~ factor(x), data = anova_trans)
+gf_point(resid(aov3) ~ x, data = anova_trans) |>
+  gf_hline(yintercept = 0, color = "blue") +
+gf_qq(~resid(aov3), data = anova_trans) |> gf_qqline()
+
+anova_trans$Logy3 = log10(anova_trans$y3 + 10)
+anova_trans$Lny3 = log(anova_trans$y3 + 10)
+anova_trans$Reci = 1/anova_trans$y3
+
+
+trans_anova_Log <- aov(Logy3 ~ factor(x), data = anova_trans)
+trans_resid_Log <- resid(trans_anova_Log)
+
+gf_qq(~trans_resid_Log, data = anova_trans) |> gf_qqline() +
+gf_point(trans_resid_Log ~ x, data = anova_trans) |>
+  gf_hline(yintercept = 0, color = "blue")
+
+
 ```
 
 
