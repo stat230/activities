@@ -1,0 +1,112 @@
+---
+title: "Comparing and Contrasting ANOVA and Regression"
+date: "2022-09-21"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+# Load the required R packages in this setup chunk
+library(mosaic)
+library(ggformula)
+
+# Load the data set in the set up chunk
+corn <- read.csv("https://aloy.rbind.io/data/cornplot.csv")
+```
+
+## Task 1
+
+```{r data-plot}
+# Delete this comment and put your code here
+```
+
+Write your answer here...
+
+
+## Task 2
+
+Write your answer here...
+
+
+## Task 3
+
+```{r anova-model}
+# Delete this comment and put your code here
+```
+
+
+## Task 4
+
+```{r anova-plot}
+group_means <- corn |> 
+  group_by(Treatment) |> 
+  summarize(avg = mean(Weight))
+
+gf_jitter(Weight ~ Treatment, data = corn, width= 0.1) |>
+  gf_summary(fun.y = "mean", color = "darkorange", size = 3, geom = "point")
+```
+
+Write your comments here...
+
+
+## Task 5 
+
+```{r diagnostic-plots}
+# Delete this comment and put your code here
+```
+
+Write your answer here...
+
+
+## Task 6
+
+```{r post-hoc-intervals, error=FALSE}
+# Fill in the blanks
+tstar <- qt(___, df = ___) # calculate t*
+mse <- ___ # MSE from ANOVA
+
+# Now calculate the CIs
+(___ - ___) + tstar * mse * sqrt(___ + ___)
+(___ - ___) - tstar * mse * sqrt(___ + ___)
+```
+
+
+## Task 7
+
+Write your answer here...
+
+
+
+## Task 8
+
+```{r regression-mod}
+# Delete this comment and put your code here
+```
+
+
+## Task 9
+
+```{r}
+gf_jitter(Weight ~ Treatment, data = corn, width= 0.1) |>
+  gf_lm(color = "darkorange")
+```
+
+Write your answer here...
+
+
+## Task 10
+
+```{r lm-diagnostics}
+# Delete this comment and put your code here
+```
+
+Write your answer here...
+
+
+## Task 11
+
+Write your answer here...
+
+
+## Task 12
+
+Write your statement here...

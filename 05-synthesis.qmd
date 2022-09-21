@@ -94,6 +94,11 @@ You may recall from your introductory statistics course that running a large num
 
 **Task `r (task <- task + 1)`.**  Calculate 95% confidence intervals for the 10 pairwise comparisons of each of the treatments. To calculate an interval we use the same formula as our two-sample t-based intervals, but set $s_p = \sqrt{MSE}$. Thus, you are calculating $\bar{y}_{i\cdot}-\bar{y}_{j\cdot} \pm t^* \cdot \sqrt{MSE\left( \frac{1}{n_i}+\frac{1}{n_j} \right)}$. (Recall that you can obtain the group means and sample sizes from `favstats()`.)
 
+:::{.callout-note}
+## Finding $t*$
+Recall that you can calculate the $t*$ value for a confidence interval using `qt(area, df)`. Where `area` is $1-\alpha/2$ (notice how this differs from the confidence level of $1-\alpha$) and `df` are the degrees of freedom.
+:::
+
 
 **Task `r (task <- task + 1)`.** Summarize, broadly, what these intervals tell you about how the treatments compare to each other.
 
