@@ -99,6 +99,30 @@ You may recall from your introductory statistics course that running a large num
 Recall that you can calculate the $t*$ value for a confidence interval using `qt(area, df)`. Where `area` is $1-\alpha/2$ (notice how this differs from the confidence level of $1-\alpha$) and `df` are the degrees of freedom.
 :::
 
+```{r}
+#| include: false
+tstar <- qt(0.975, df = 4)
+mse <- 7.96 # MSE from ANOVA
+means <- mean(~Weight | Treatment, data = corn)
+
+pairwise_cis <- data.frame(comparison = character(10), lower = numeric(10), upper = numeric(10))
+counter <- 0
+
+for(i in 1:5) {
+  for(j in (i+1):5) {
+    if(i == j) break
+    if(j > 5) break
+    counter <- counter + 1
+    ci <- means[i] - means[j] + c(-1, 1) * tstar * sqrt(mse) * sqrt(1/12 + 1/12)
+    pairwise_cis[counter,] <- data.frame(comparison = paste(i, j, sep = " - "), lower = ci[1], upper = ci[2])
+  }
+}
+
+
+```
+
+
+
 
 **Task `r (task <- task + 1)`.** Summarize, broadly, what these intervals tell you about how the treatments compare to each other.
 

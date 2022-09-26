@@ -1,0 +1,118 @@
+---
+title: "Prediction for Simple Linear Regression"
+date: "2022-09-26"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+# Load the required R packages in this setup chunk
+library(mosaic)
+library(ggformula)
+
+# Load the data set in the set up chunk
+cars <- read.csv("https://aloy.rbind.io/kuiper_data/Cars.csv")
+```
+
+## Task 1
+
+```{r scatterplot}
+# Delete this comment and put your code here
+```
+
+Write your answer here...
+
+
+## Task 2
+
+```{r fit-model}
+# Delete this comment and put your code here
+```
+
+Write your answer here...
+
+
+## Task 3
+
+Write your interpretations here...
+
+
+## Task 4
+
+Write your interpretation here...
+
+
+## Task 5 
+
+Write your answer here...
+
+
+## Task 6
+
+```{r post-hoc-intervals, error=FALSE}
+# Fill in the blank with your scatterplot code
+___ |> gf_lm()
+```
+
+
+## Task 7
+
+```{r fit-model}
+# Remember R can be a big calculator
+```
+
+Write your answer here...
+
+
+
+## Task 8
+
+Write your examples here...
+
+
+## Task 9
+
+
+Write your answer here...
+
+
+## Task 10
+
+Write your answer here...
+
+
+## Task 11
+
+```{r confidence-interval}
+# Delete this comment and put your code here
+```
+
+Write your interpretation here...
+
+
+## Task 12
+
+```{r prediction-interval}
+# Delete this comment and put your code here
+```
+
+Write your interpretation here...
+
+
+## Task 13
+
+```{r}
+# Fill in the blank with your scatterplot code
+___ |> 
+  gf_lm(interval = "prediction") |>
+  gf_lm(interval = "confidence", alpha = 0.6)
+```
+
+
+
+## Task 14
+
+```{r diagnostics}
+# Delete this comment and put your code here
+```
+
+Write your comments here...
