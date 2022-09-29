@@ -1,5 +1,5 @@
 ---
-title: "Diagnostics and Transformations"
+title: "SLR Diagnostics and Transformations"
 date: "2022-09-30"
 output: html_document
 ---
