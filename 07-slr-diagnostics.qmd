@@ -95,7 +95,7 @@ For example, if we log-transformed both `x` and `y`, then we pass `log(y) ~ log(
 ```{r}
 #| eval: false
 gf_point(yvar ~ xvar, data = df) |>
-  gf_lm(log(y) ~ log(x), backtrans = exp, interval = "confidence")
+  gf_lm(formula = log(y) ~ log(x), backtrans = exp, interval = "confidence")
 ```
 
 Use this idea to plot the fitted model relating brain weights and body weights on the original scale.
