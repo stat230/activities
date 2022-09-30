@@ -68,7 +68,23 @@ This new data set will have the columns used to fit your model as well as `.resi
 
 \bigskip
 
-**Task 3.** Extended Activity 33 in chapter 2 of your textbook provides the `RegrTrans` data set which contains four pairs of variables (`X1`, `Y1`; `X2`, `Y2`; `X3`, `Y3`; `X4`, `Y4`) to help you practice exploring and applying transformations. For each pair of variables, complete parts (a)-(c) given in your textbook.
+**Task 3.** In Task 2 you selected transformation(s) to help "linearize" the relationship between brain weights and body weights. While this is helpful from a statistical perspective, it's often preferred to plot the fitted model on the **original scale** of the data. To do this, we need to backtransform the model.
+
+- Start by creating a scatterplot on the original scale. 
+- Then, add a `gf_lm` layer, specifying in the transformations in the `formula` and *if $y$ is transformed* how to backtransform $y$ via the `backtrans` argument. 
+
+For example, if we log-transformed both `x` and `y`, then we pass `log(y) ~ log(x)` in as the formula to `gf_lm()` and `backtrans = exp` to backtransform `y`. Below is the full call where `df` is the data set with columns `x` and `y`. 
+```{r}
+#| eval: false
+gf_point(y ~ x, data = df) |>
+  gf_lm(formula = log(y) ~ log(x), backtrans = exp, interval = "confidence")
+```
+
+Use this idea to plot the fitted model relating brain weights and body weights on the original scale.
+
+\bigskip
+
+**Task 4.** Extended Activity 33 in chapter 2 of your textbook provides the `RegrTrans` data set which contains four pairs of variables (`X1`, `Y1`; `X2`, `Y2`; `X3`, `Y3`; `X4`, `Y4`) to help you practice exploring and applying transformations. For each pair of variables, complete parts (a)-(c) given in your textbook.
 
 ```{r}
 regr_trans <- read.csv("https://aloy.rbind.io/kuiper_data/RegrTrans.csv")
@@ -87,14 +103,14 @@ To begin, load the data.
 bonds <- read.csv("https://aloy.rbind.io/data/bonds.csv")
 ```
 
-**Task 4.** Fit a simple linear regression model to predict the bid price given the coupon rate of U.S. Treasury bonds. Write down the fitted model equation.
+**Task 5.** Fit a simple linear regression model to predict the bid price given the coupon rate of U.S. Treasury bonds. Write down the fitted model equation.
 ```{r}
 #| include: false
 fm <- lm(BidPrice ~ CouponRate, data = bonds)
 ```
 
 
-**Task 5.** Create a scatterplot of bid price against the coupon rate and superimpose the fitted regression line. Do you see any potential outliers? If so, identify what rows of the data set correspond to these outliers. (Hint: Click on the name of the data set in the "Environment" tab to open a spreadsheet of the data.)
+**Task 6.** Create a scatterplot of bid price against the coupon rate and superimpose the fitted regression line. Do you see any potential outliers? If so, identify what rows of the data set correspond to these outliers. (Hint: Click on the name of the data set in the "Environment" tab to open a spreadsheet of the data.)
 
 ```{r}
 #| include: false
@@ -104,7 +120,7 @@ gf_point(BidPrice ~ CouponRate, data = bonds, xlab = "Coupon rate", ylab = "Bid 
 ```
 
 
-**Task 6.** Create a plot of the standardized residuals vs. the fitted values. Do you see any potential outliers? If so, identify what rows of the data set correspond to these outliers. Are they the same rows? (Hint: use the `augment()` function from {broom} here and look at the `.std.resid` column to find potential outliers as flagged by the standardized residuals.)
+**Task 7.** Create a plot of the standardized residuals vs. the fitted values. Do you see any potential outliers? If so, identify what rows of the data set correspond to these outliers. Are they the same rows? (Hint: use the `augment()` function from {broom} here and look at the `.std.resid` column to find potential outliers as flagged by the standardized residuals.)
 
 ```{r}
 #| include: false
@@ -113,23 +129,23 @@ resid_df <- augment(fm)
 # Potential Outliers are 13, 35
 ```
 
-**Task 7.** Create an index plot of the leverage values for each observation. You can do this from the augmented data frame, but a quicker way is to use the `infIndexPlot()` function in the {car} package. `infIndexPlot()` requires that you pass in the fitted regression model as well as the influence diagnostic you want to plot. Notice that it calls the leverage `"hat"`. Identify the high leverage cases (the row numbers are printed for "auto detected" high leverage points).
+**Task 8.** Create an index plot of the leverage values for each observation. You can do this from the augmented data frame, but a quicker way is to use the `infIndexPlot()` function in the {car} package. `infIndexPlot()` requires that you pass in the fitted regression model as well as the influence diagnostic you want to plot. Notice that it calls the leverage `"hat"`. Identify the high leverage cases (the row numbers are printed for "auto detected" high leverage points).
 
 ```{r}
 #| eval: false
 infIndexPlot(fm, vars = "hat")
 ```
 
-**Task 8.** Compare the cases (row numbers) you identified in Task 6 and Task 7. Which, if any, of these points to you expect to have high values of Cook's distance? Why?
+**Task 9.** Compare the cases (row numbers) you identified in Task 6 and Task 7. Which, if any, of these points to you expect to have high values of Cook's distance? Why?
 
-**Task 9.** Create an index plot of the Cook's distance values for each observation. You can do this from the augmented data frame, but a quicker way is to use the `infIndexPlot()` function in the {car} package by setting `vars = "Cook"`. Are there any influential points identified by Cook's distance? If so, identify these points by their row number.
+**Task 10.** Create an index plot of the Cook's distance values for each observation. You can do this from the augmented data frame, but a quicker way is to use the `infIndexPlot()` function in the {car} package by setting `vars = "Cook"`. Are there any influential points identified by Cook's distance? If so, identify these points by their row number.
 
 ```{r}
 #| eval: false
 infIndexPlot(fm, vars = "Cook")
 ```
 
-**Task 10.** Refit the model without the influential points you identified in Task 9. To do this, add a `subset` argument to `lm()` as seen below. How much did the regression coefficients change?
+**Task 11.** Refit the model without the influential points you identified in Task 9. To do this, add a `subset` argument to `lm()` as seen below. How much did the regression coefficients change?
 
 ```{r}
 #| eval: false
@@ -142,7 +158,7 @@ no_influential <- lm(BidPrice ~ CouponRate, data = bonds, subset = -c(___))
 no_influential <- lm(BidPrice ~ CouponRate, data = bonds, subset = -c(13, 35))
 ```
 
-**Task 11.**  Are we done? Check the residual plots and recreate the influence index plots you considered in Tasks 7 and 9. Do any additional points cause concern after your have already deleted a few points?
+**Task 12.**  Are we done? Check the residual plots and recreate the influence index plots you considered in Tasks 7 and 9. Do any additional points cause concern after your have already deleted a few points?
 
 
 ## Should we delete the outliers/influential points?
@@ -151,6 +167,7 @@ As I discussed in the daily prep videos, it is not always wise to delete outlier
 
 ```{r}
 #| echo: false
-knitr::include_graphics("img/sleuth_outlier_flowchart.pdf")
+#| out.width: 80%
+knitr::include_graphics("img/sleuth_outlier_flowchart.png")
 ```
 

@@ -10,6 +10,15 @@ format:
       - bottom=1in
 ---
 
+```{r setup, include=FALSE}
+# Load the required R packages in this setup chunk
+library(mosaic)
+library(ggformula)
+
+# Load the data set in the set up chunk
+cars <- read.csv("https://aloy.rbind.io/kuiper_data/Cars.csv")
+```
+
 In this class, you will work with your group to review inference for simple linear
 regression models with a quantitative predictor, and also learn how to create
 intervals for predictions. While you work through this activity, make sure that 
@@ -30,6 +39,7 @@ $$
 
 **Task 1.** (Ch. 3 Activity 1) Load in the `Cars` data set and create a scatterplot
 to display the relationship between `Mileage` and `Price`. Be sure that the x- and y-axis labels are informative. Describe the relationship between the two variables.
+
 
 **Task 2** (Adaptation of Activity 2) Fit the simple linear regression model where `Mileage` is used to predict `Price`. Report the following information from the fitted model: the fitted regression equation, $R^2$, the correlation between `Price` and `Mileage`, and the coefficient table containing the t-statistics, standard errors, and p-values for the y-intercept and sloe. (Note that $R^2$ is called `Multiple R-squared` in the summary of a regression model.)
 
