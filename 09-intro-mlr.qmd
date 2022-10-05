@@ -57,7 +57,7 @@ cars |> ggpairs(columns = c("Mileage", "Cyl", "Liter", "Doors", "Price"))
 ```
 
 
-**Task 1.** Use the above code to create a scatterplot of the quantitative variables in the `Cars` data set. Which appear to be useful predictors of price?
+**Task 1.** Use the above code to create a scatterplot matrix of the quantitative variables in the `Cars` data set. Which appear to be useful predictors of price?
 
 **Task 2.** Fit the multiple linear regression model of `Price` against the other quantitative variables. This can be done using the `lm()` command and separating the names of the explanatory variables with a `+` sign. Fill in the blanks in the below code chunk to fit this model. Report the equation of the fitted multiple regression model.
 
@@ -79,7 +79,7 @@ cars_lm <- lm(Price ~ Mileage + Cyl + Liter + Doors, data = cars)
 * the slope for `Mileage`
 * the slope for `Doors` (think carefully whether you want a 1-door increase here, or some other unit increase)
 
-**Task 4.** To print the table of regression coefficients and the results of a t-test for each you can use the `summary()` command. This is a "quick" way to format this table, but sometimes it prints too much information. If you want to focus only on the coefficient table, using the `tidy()` command in the {broom} package is a good idea. Based on this table, which variables appear to be associated with the price?
+**Task 4.** To print the table of regression coefficients and the results of a t-test for each you can use the `summary()` command. This is a "quick" way to format this table, but sometimes it prints too much information. If you want to focus only on the coefficient table, using the `tidy()` command in the {broom} package is a better function. Based on this table, which variables appear to be associated with the price?
 
 ```{r}
 #| eval: false
