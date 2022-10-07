@@ -1,0 +1,30 @@
+---
+title: "Adding Categorical Variables"
+date: "2022-10-07"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+# Load the required R packages in this setup chunk
+
+
+# Load the data sets in the set up chunk
+```
+
+## Task 1
+
+## Task 2
+
+## Task 3
+
+## Task 4
+
+## Task 5
+
+## Task 6
+
+## Task 7
+
+## Task 8
+
+

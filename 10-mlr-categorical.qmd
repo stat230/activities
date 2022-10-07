@@ -92,3 +92,7 @@ R chooses the the version subtracting SSE in the numerator.
 \bigskip
 
 **Task `r (task <- task + 1)`.** If you prefer to work with SSR you can run `anova()` on only the full model, but you need to be careful about the order you add the variables into your multiple linear regression model (to make your life easier). Refit your model (if needed) to add `Mileage` as the first explanatory variable and `Make` as the second explanatory variable. Then run `anova()` and only pass in your full model. You should see an ANOVA table with rows `Mileage`, `Make`, and `Residuals`, in that order. Verify that the F-statistic for `Make` is the same as the F-statistic calculated in the previous task.
+
+## Adding additional categorical variables.
+
+**Optional task.** If you get done with the above tasks before the end of class, revisit the exploratory plots you created in Task 1 and expand your multiple linear regression model to include the other potentially useful categorical variables. Think about how they can be interpreted and determine whether they discernibly improve the model.
