@@ -17,6 +17,7 @@ library(car)
 library(broom)
 library(dplyr)
 library(GGally)
+library(mosaic)
 
 task <- 0
 ```
@@ -61,6 +62,18 @@ cars_lm <- lm(log(Price) ~ Mileage + Make, data = cars)
 # Be sure to load mosaic in the setup chunk!
 plotModel(___)
 ```
+
+:::{.callout-warning}
+If you transform the response variable you will get an error. To avoid this, you can
+create a new column in the data set for the transformed response and then refit your regression model. In this example, we do the following:
+
+```{r eval=FALSE}
+cars$logprice <- log(cars$Price)
+cars_lm2 <- lm(logprice ~ Mileage + Make, data = cars)
+plotModel(cars_lm2)
+```
+
+:::
 
 
 
