@@ -35,6 +35,16 @@ cars <- read.csv("https://aloy.rbind.io/kuiper_data/cars.csv")
 
 **Task `r (task <- task + 1)`.** (Activity 17) Make boxplots or individual value plots of `log(Price)` versus the categorical variables `Make`, `Model`, `Trim`, and `Type`.
 
+```{r}
+#| include: false
+#| eval: false
+gf_boxplot(log(Price) ~ Make, data = cars) +
+gf_boxplot(log(Price) ~ Type, data = cars)
+gf_boxplot(log(Price) ~ Trim, data = cars) + coord_flip() +
+gf_boxplot(log(Price) ~ Model, data = cars) + coord_flip()
+```
+
+
 \bigskip
 
 **Task `r (task <- task + 1)`.** (Adaptation of Activity 18) Create five indicator variables that can be used to represent the six possible values of `Make` (Buick, Cadillac, Chevrolet, Pontiac, SAAB, Saturn). To answer this, just describe *how* you would define them.
