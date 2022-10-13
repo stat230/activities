@@ -39,7 +39,7 @@ $\mu(\mathtt{Price} | \mathtt{Mileage}, \mathtt{Cyl}) = \beta_0 + \beta_1 \matht
 
 ```{r}
 #| include: false
-cars_lm1 <- lm(log(Price) ~ Mileage + Cyl, data = cars)
+cars_lm1 <- lm(Price ~ Mileage + Cyl, data = cars)
 ```
 
 \bigskip
@@ -50,7 +50,7 @@ $\mu(\mathtt{Price} | \mathtt{Mileage}, \mathtt{Cyl}) = \beta_0 + \beta_1 \matht
 
 ```{r}
 #| include: false
-cars_lm2 <- lm(log(Price) ~ Mileage * Cyl, data = cars)
+cars_lm2 <- lm(Price ~ Mileage * Cyl, data = cars)
 ```
 
 :::{.callout-note}
