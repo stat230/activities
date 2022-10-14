@@ -67,9 +67,17 @@ Additionally, R follows the conventional modeling advice to always include the m
 
 **Task `r (task <- task + 1)`.** For both models, calculate the estimated price of a four-cylinder car with `Mileage` = 10000.
 
+```{r}
+#| include: false
+predict(cars_lm1, newdata = data.frame(Mileage = 10000, Cyl=4))
+predict(cars_lm2, newdata = data.frame(Mileage = 10000, Cyl=4))
+```
+
+
 \bigskip
 
 **Task `r (task <- task + 1)`.** Assuming `Mileage` = 10000, for both models explain how increasing from four to eight cylinders will impact the estimated price.
+
 
 \bigskip
 

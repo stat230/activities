@@ -50,7 +50,11 @@ mnsales <- read.csv("https://aloy.rbind.io/data/mnsales.csv")
 
 Before we launch into our investigation of multicollinearity, let's discuss a common question that I have received about the summary output from a regression model in R: "what is this Adjusted R-squared value?"
 
-**Task `r (task <- task + 1)`.** Fit three regression models using `price` as the response variable. For each, report both the the $R^2$ value and the adjusted $R^2$ values. Are they different? How do they change?
+**Task `r (task <- task + 1)`.** Fit three regression models using `price` as the response variable. For each, report both the $R^2$ and the adjusted $R^2$ values. Are they different? How do they change?
+
+:::{.callout-note}
+The `glance()` function in the {broom} package extracts some summary statistics from a regression model, such as the  $R^2$ and the adjusted $R^2$ values, the F-statistic, and the estimated residual standard deviation.
+:::
 
 (a) Use only `sqft` as a predictor variable.
 (a) Use only `sqft` and `age` as predictor variables.
@@ -63,7 +67,7 @@ mod2 <- lm(price ~ lot + age, data = mnsales)
 mod3 <- lm(price ~ lot + age + parking, data = mnsales)
 ```
 
-Recall that $R^2$ describes the proportion of variability in the response that is explained by the regression model. Adding a new predictor variable will only increase the amount of variability explained, or at the worst have no impact (if the added predictor is independent of the response). Consequently, $R^2$ is not a useful metric to compare fitted models. 
+Recall that $R^2$ describes the proportion of variability in the response that is explained by the regression model. Adding a new predictor variable will only increase the amount of variability explained, or at the worst have no impact (if the added predictor is independent of the response). Consequently, $R^2$ is not a useful metric to compare fitted models with different numbers of predictor variables. 
 
 The adjusted $R^2$, $R^2_{\mathrm{adj}}$, imposes a *penalty for model complexity*, so it increases only if the improvement (i.e., increase in the explained variability) outweighs the cost of making the model more complex. The formula for $R^2$ is given by
 
