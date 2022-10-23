@@ -1,5 +1,5 @@
 ---
-title: "Fitting and Interpretting Logistic Regression"
+title: "Inference for Logistic Regression"
 subtitle: "Logistic regression -- Stat 230"
 format:
   pdf:
@@ -20,7 +20,7 @@ library(dplyr)
 task <- 0
 ```
 
-In this class, you explore how to model a binary response variable using a logistic regression model. To do this we will analyze the space shuttle O-ring data set described at the beginning of Chapter 7. 
+In this class, you explore to conduct inference for single regression coefficients as well as subsets of regression coefficients.. To do this we will continue to analyze the space shuttle O-ring data set described at the beginning of Chapter 7. 
 
 You can load the data using the command
 
@@ -28,67 +28,73 @@ You can load the data using the command
 shuttle <- read.csv("https://aloy.rbind.io/kuiper_data/Shuttle.csv")
 ```
 
-## Describing the data
-
-To begin, let's get an idea of what's in our data set. 
-
-**Task `r (task <- task + 1)`.** Complete Chapter 7 Activity 1. "Based on the description of the Challenger disaster O-ring concerns, identify which variable in the `Shuttle` data set in Table 7.1 should be the explanatory variable and which should be the response variable."
-
-**Task `r (task <- task + 1)`.** Complete Complete Chapter 7 Activity 2. "Imagine you were an engineer working for Thiokol Corporation prior to January 1986. Create a few graphs of the [`Shuttle` data]. Is it obvious that temperature is related to the success of the O-rings?"
-
-## What's so bad about linear regression?
-
-Before diving into a new model class, let's take a little time to really understand the need for this new model.
-
-**Task `r (task <- task + 1)`.** Complete Complete Chapter 7 Activity 3. "Use the [`Shuttle`] data to create a scatterplot with a least squares regression line for the space shuttle data. Calculate the predicted response values when the temperature is 60$^\circ$F and when the temperature is 85$^\circ$F."
+Last class you fit a simple logistic regression model where you used the temperature to predict whether a launch would be successful (i.e., there would be no O-ring damage). You used the following code to fit this model:
 
 ```{r}
-#| include: false
-#| eval: false
-shuttle_lm <- lm(Success ~ Temperature, data = shuttle)
-
-gf_point(Success ~ Temperature, data = shuttle) |>
-  gf_lm()
+shuttle_glm <- glm(Success ~ Temperature, data = shuttle, family = "binomial")
 ```
 
+You first tasks today will be to conduct inference for this fitted model.
+
+## Wald intervals and tests
+
+**Task `r (task <- task + 1)`.** Construct a 95% confidence interval for the slope of the logistic regression model. Interpret this interval in context on the odds scale. You can use R to do this, but be sure you are also able to do this "by hand" where you only use R to find $z^*$, and perhaps as a calculator.
+
+:::{.callout-note}
+# Confidence intervals in R
+Wald-based confidence intervals can be constructed in R using the `confint.defaut()` function. You should pass in your fitted model to this function and can specify the confidence level using the `level` argument (be sure to enter a value between 0 and 1).
+:::
+
+**Task `r (task <- task + 1)`.** Complete chapter 7 activity 12. "Calculate the odds ratio of a successful launch between 31$^\circ$F and 60$^\circ$F. Provide a confidence interval for this odds ratio and interpret your results." (Notice that this is a 29$^\circ$F increase in the temperature.) You can use a 95% confidence level for this problem.
 
 
-**Task `r (task <- task + 1)`.** Create a residual plot for the least squares regression line you just plotted in the previous task. Do the model assumptions appear to be met?
+**Task `r (task <- task + 1)`.** What happens if we switch what we consider a success and a failure? Activity 13 asks you to explore this idea. To switch what R considers a success you can create a new column, which we'll call `Failure`, that takes on 1 when an O-ring failure occurred and 0 otherwise. The below code will do this, but if you look at the results you will see a column of `TRUE` and `FALSE` values. This is confusing at first, but R treats `TRUE`s as `1`s and `FALSE`s as `0`s. Use this new column to complete activity 13.
+
+```{r message=FALSE}
+library(dplyr)
+shuttle <- shuttle |> mutate(Failure = Success == 0)
+```
+
+## Likelihood ratio tests two ways
+
+In R there are two ways to conduct the likelihood ratio test of $H_0: \beta_1=0$ vs. $H_a: \beta_1 \ne 0$. The first is to calculate it "by hand" from the results of the `summary()` function and use the null and residual deviances along with the `pchisq()` function to calculate a p-value (I showed you this approach in the daily prep). The alternative approach is to use the `anova()` command.
+
+:::{.callout-note}
+# Likelihood ratio tests in R
+You can carryout likelihood ratio tests in R by fitting a full and reduced model, and then using the `anova()` command to carryout the test.
+
+For the `shuttle` data, we have already fit the full model. To fit the reduced model with only an intercept we use `1` as our explanatory variable
+```{r}
+shuttle_reduced <- glm( Success ~ 1, data = shuttle, family = "binomial")
+```
+
+Then, we pass the two models to `anova()` just like in the extra-sums-of-squares F-test, but we add `test = "LRT"` to indicate that this is the likelihood ratio test.
+
+```{r eval=FALSE}
+anova(shuttle_reduced, shuttle_glm, test = "LRT")
+```
+:::
+
+
+**Task `r (task <- task + 1)`.** Verify that the `anova()` command gives you the same results as the "by hand" calculation of the likelihood ratio test. Once you have verified this, state your conclusion to this test.
+
+
+## Multiple explanatory variables
+
+Now, let's consider a logistic regression model that uses multiple explanatory variables to describe the log odds of success. We'll consider the `Cancer2` data set that is briefly introduced on pages 224-225, and has an expanded introduction in Section 6.1 on page 177. To load the data, run 
 
 ```{r}
-#| include: false
-#| eval: false
-residualPlot(shuttle_lm, quadratic = FALSE)
+cancer2 <- read.csv("https://aloy.rbind.io/kuiper_data/Cancer2.csv")
 ```
 
-
-## Binary logistic regression 
-
-In the previous section you should have seen some pretty obvious deficiencies of the "standard" linear regression model based on a residual plot. In this section, you'll learn how to fit a logistic regression model.
+**Task `r (task <- task + 1)`.** Complete chapter 7 activity 15 (see the book for the prompt). To Fit a multiple logistic regression model in R we add more variables into the formula we pass to `glm()`, just like you added multiple variables to a multiple regression model when you use `lm()`. 
 
 
-**Task `r (task <- task + 1)`.** To fit a logistic regression model, we use the `glm()` command (which stands for generalized linear model) rather than the `lm()` command. The formula interface is the same, as is the need for the `data` argument, but now we must also add the `family = binomial` argument to specify that we want to fit a logistic regression model. Fill in the blanks in the blanks to fit the logistic regression model for the `Shuttle` data set. Compare the estimates for $\beta_0$ and $\beta_1$ you get from this logistic regression model to those you obtained from simple linear regression.
+**Task `r (task <- task + 1)`.** Complete chapter 7 activity 16. 
 
-```{r}
-#| eval: false
-# Fill in the model formula in the first blank
-# Fill in the data set name in the 2nd blank
-shuttle_glm <- glm(___, data = ___, family = "binomial")
-```
+**Task `r (task <- task + 1)`.** Complete chapter 7 activity 17.
 
+**Task `r (task <- task + 1)`.** Use the drop-in-deviance test (i.e., likelihood ratio test) to compare the two models you fit in tasks 5 and 6 (i.e., activities 15 and 16). State a conclusion to this test in context.
 
+**Task `r (task <- task + 1)`.** Now, conduct a Wald test on the coefficient for `Concave` using the full model. State the test statistic, p-value, and your conclusion. Does your conclusion agree with the drop-in-deviance test? Is the p-value identical?
 
-**Task `r (task <- task + 1)`.** Complete Complete Chapter 7 Activity 7. "Use Equation (7.9) to predict the probability that a launch has no O-ring damage when the temperature is  31$^\circ$F, 50$^\circ$F, and 75$^\circ$F." You should be able to do this either by hand or with R. To make these predictions in R, we can use the `predict()` function just like in linear regression, but to obtain predicted probabilities (rather than log odds) we have to add the argument `type = "response"`.
-
-```{r}
-#| eval: false
-new_data <- data.frame(Temperature = c(31, 50, 75))
-predict(shuttle_glm, newdata = new_data, type = "response")
-```
-
-
-**Task `r (task <- task + 1)`.** Complete Complete Chapter 7 Activity 8. "Calculate the odds of a launch with no O-ring damage when the temperature is 60$^\circ$F and when the temperature is 70$^\circ$F." Again you should be able to do this either by hand or with R. To calculate the log odds in R, you can use the `predict()` function but omit the `type = "response"` argument. 
-
-**Task `r (task <- task + 1)`.** Complete Complete Chapter 7 Activity 9. "When $x_i$ increases by 10, state in terms of $e^{b_1}$ how much you would expect the log odds to change."
-
-**Task `r (task <- task + 1)`.** Complete Complete Chapter 7 Activity 10. "The difference between the odds of success at 60$^\circ$F and 59$^\circ$F is about $0.3285-0.2605=0.068$. Would you expect the difference between the odds at 52$^\circ$F and 51$^\circ$F to also be about 0.068? Explain why or why not.
