@@ -20,7 +20,7 @@ library(dplyr)
 task <- 0
 ```
 
-In this class, you explore to conduct inference for single regression coefficients as well as subsets of regression coefficients.. To do this we will continue to analyze the space shuttle O-ring data set described at the beginning of Chapter 7. 
+In this class, you will conduct inference for single regression coefficients as well as subsets of regression coefficients. To begin, you will continue to analyze the space shuttle O-ring data set described at the beginning of Chapter 7. 
 
 You can load the data using the command
 
@@ -34,7 +34,7 @@ Last class you fit a simple logistic regression model where you used the tempera
 shuttle_glm <- glm(Success ~ Temperature, data = shuttle, family = "binomial")
 ```
 
-You first tasks today will be to conduct inference for this fitted model.
+Today, your first tasks are to conduct inference for this fitted model.
 
 ## Wald intervals and tests
 
