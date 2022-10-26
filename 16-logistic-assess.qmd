@@ -133,7 +133,7 @@ arm::binnedplot(mod2_aug$s, mod2_aug$.resp.resid, xlab = "diameter")
 
 Once you have verified that your model is valid, you might wish to determine how well the model describes the observed data. In linear regression we used $R^2$ as such measure. In logistic regression, Kuiper and Sklar recommend the use of a few association metrics to determine the degree of association between the model's predictions and the observed data. A better model should produce predictions that are more highly associated with the observed data.
 
-In order to obtain the three measures of association described in the textbook, we need to use a different function to fit our logistic regression model. We'll use the `lmr()` function in the {rms} package. For example, we can refit the regression model from the previous task using the below code:
+In order to obtain the three measures of association described in the textbook, we need to use a different function to fit our logistic regression model. We'll use the `lrm()` function in the {rms} package. For example, we can refit the regression model from the previous task using the below code:
 
 ```{r eval=FALSE}
 lrm(y ~ log(d) + s + spp, data = blowdown)
@@ -152,4 +152,22 @@ model4_glm <- glm(y ~ (log(d) + s + spp)^3, data = blowdown)
 **Task `r (task <- task + 1)`.** Use `anova()` to run a drop-in deviance test comparing the model with and without the interaction. (Make sure you are using the two models fit using the `glm()` command.) What do you find?
 
 
-**Task `r (task <- task + 1)`.** The data set has `r nrow(blowdown)` rows, so we have enough observations to for statistically discernible "improvements" to the model to be very small boosts to the association. Remember that we prefer simpler models, so we would prefer the no interaction if the predictions and the observed data had roughly the same level of association as the more complex model. Refit the interaction model using `lrm()` and report the three measures of association. Do the interactions appear to substantially improve the association between the predictions and the observed data?
+**Task `r (task <- task + 1)`.** The data set has `r nrow(blowdown)` rows, so we have enough observations to find statistically discernible "improvements" to the model that are minimal boosts to the association. Remember that we prefer simpler models, so we would prefer the no interaction if the predictions and the observed data had roughly the same level of association as the more complex model. Refit the interaction model using `lrm()` and report the three measures of association. Do the interactions appear to substantially improve the association between the predictions and the observed data?
+
+
+## Visualizing the fitted model
+
+Once you settle on a final model, it can be useful to plot the fitted model to communicate your findings. The below code creates effects plots for the interaction model using three difference values for severity. What do you learn from this plot?
+
+```{r}
+#| eval: false
+# Specify interest in the main effects and levels for s to display
+eff <- Effect(c("d", "s", "spp"), mod = model4_glm, xlevels = list(s=c(.2, .35, .55 )))
+
+# Create the plot
+plot(eff, grid=TRUE, x.var = "d", multiline = TRUE,
+     xlab="Diameter", main="", lines=c(1, 3, 2),
+     ylab="Prob. of blow down", type = "response", rug=FALSE, cex = .45)
+```
+
+Adapt the above code to use the no interaction model. How does the plot change?
