@@ -146,13 +146,18 @@ lrm(y ~ log(d) + s + spp, data = blowdown)
 **Task `r (task <- task + 1)`.** Next, let's consider an expanded model with interactions between the three predictors that are included in the model thus far. Run the below code chunk to fit this model
 
 ```{r}
-model4_glm <- glm(y ~ (log(d) + s + spp)^3, data = blowdown)
+model4_glm <- glm(y ~ (log(d) + s + spp)^3, data = blowdown, family = "binomial")
 ```
 
 **Task `r (task <- task + 1)`.** Use `anova()` to run a drop-in deviance test comparing the model with and without the interaction. (Make sure you are using the two models fit using the `glm()` command.) What do you find?
 
 
 **Task `r (task <- task + 1)`.** The data set has `r nrow(blowdown)` rows, so we have enough observations to find statistically discernible "improvements" to the model that are minimal boosts to the association. Remember that we prefer simpler models, so we would prefer the no interaction if the predictions and the observed data had roughly the same level of association as the more complex model. Refit the interaction model using `lrm()` and report the three measures of association. Do the interactions appear to substantially improve the association between the predictions and the observed data?
+
+```{r include=FALSE}
+lrm(y ~ (log(d) + s + spp)^3, data = blowdown)
+```
+
 
 
 ## Visualizing the fitted model
