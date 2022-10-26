@@ -1,0 +1,155 @@
+---
+title: "Model Assessment"
+subtitle: "Logistic regression -- Stat 230"
+format:
+  pdf:
+    geometry:
+      - top=1in
+      - left=1in
+      - right=1in
+      - bottom=1in
+---
+
+```{r setup}
+#| include: false
+library(ggformula)
+library(car)
+library(broom)
+library(dplyr)
+library(rms)
+library(effects)
+
+task <- 0
+```
+
+In this class, you will fit and assess binary logistic regression models both for their utility in
+describing the observed associations and making predictions. In addition, you will check the assumptions
+required for valid inference.
+
+
+## Data overview
+
+The Boundary Waters Blowdown was a derecho (a severe windstorm) that occurred in July 1999 that caused massive damage to the Boundary Waters Canoe Area Wilderness in northeastern Minnesota, among other areas. In total, the storm caused over \$100 million dollars in damage. Researchers studied the effects of this storm using an extensive ground survey of the area, determining the status (alive or dead) of more than 3600 trees.
+
+The data may be loaded using the command
+
+```{r}
+blowdown <- read.csv("http://aloy.rbind.io/data/blowdown.csv")
+```
+
+The variables in the data set are:
+
+- `y`: status, $1 =$ dead, $0 =$ survived
+- `d`: tree diameter, in cm
+- `s`: proportion of basal area killed (a measure of local severity of the storm)
+- `spp`: tree species (there are 9)
+
+## Plotting an initial model
+
+**Task `r (task <- task + 1)`.** Fit a logistic regression model using diameter to describe the status of each tree. Report the fitted equation for the linear predictor.
+
+```{r}
+#| include: false
+mod1 <- glm(y ~ d, data = blowdown, family = "binomial")
+```
+
+
+**Task `r (task <- task + 1)`.** Interpret the diameter coefficient in context.
+
+**Task `r (task <- task + 1)`.** To create plots of a fitted logistic regression model, I recommend constructing an effect plot. (Remember those from linear regression?). To create an effect plot for this model, load the {effects} package. Then run the following command:
+
+```{r}
+#| eval: false
+Effect("d", mod1) |> 
+  plot(type = "response", xlab = "diameter (cm)", ylab = "Prob. of death")
+```
+
+## Binned residual plots
+
+Now that you have an initial fitted model, we need to see whether it adequately describes the observed data.
+
+To construct a binned residual plot for a fitted binary logistic regression model, we'll use the `binnedplot()` command from the {arm} package. Building this plot requires two steps: first we will create a data frame with the necessary data, then we will run a plotting function. To create the data frame, we'll use the `augment()` command from the {broom} package, so be sure to load broom in your setup code chunk!
+
+```{r}
+#| eval: false
+# Create a data frame with response residuals and x-axis variables
+mod1_aug <- augment(mod1, blowdown) |> 
+  mutate(.resp.resid = resid(mod1, type = "response"))
+
+# Make the plot
+arm::binnedplot(mod1_aug$d, mod1_aug$.resp.resid, xlab = "diameter", col.int = NULL)
+```
+
+I don't recommend loading the {arm} package since it can cause issues with other packages, so we use `arm::binnedplot()` to call the function without loading the package.
+
+**Task `r (task <- task + 1)`.** Construct the binned residual plot and comment on what it indicates about the adequacy of the logistic regression model. 
+
+
+**Task `r (task <- task + 1)`.** In the last task, you should have found indications of a model violation. To remedy this issue, let's apply a natural log transformation to the diameter. Fit a transformed logistic regression model (just like in linear regression) and construct a new binned residual plot. Does the transformation appear to have remedied the issue?
+
+```{r}
+#| include: false
+# Create a data frame with response residuals and x-axis variables
+mod2 <- glm(y ~ log(d), data = blowdown, family = "binomial")
+
+mod2_aug <- augment(mod2, blowdown) |> 
+  mutate(.resp.resid = resid(mod2, type = "response"))
+
+# Make the plot
+arm::binnedplot(mod2_aug$d, mod2_aug$.resp.resid, xlab = "diameter", col.int = NULL)
+```
+
+**Task `r (task <- task + 1)`.** You likely found that your binned residual plot still isn't fully "satisfactory" yet. Currently, we have a very simple model, so let's consider a more complex model where we add in severity as a predictor. After fitting this model, create a new augmented data frame and create binned residual plots for the fitted values and each predictor variable. Describe any potential issues you see.
+```{r}
+#| include: false
+mod2 <- glm(y ~ log(d) + s, data = blowdown, family = "binomial")
+
+mod2_aug <- augment(mod2, blowdown) |> 
+  mutate(.resp.resid = resid(mod2, type = "response"))
+
+# Make the plot
+arm::binnedplot(mod2_aug$.fitted, mod2_aug$.resp.resid, xlab = "diameter", col.int = NULL)
+arm::binnedplot(mod2_aug$d, mod2_aug$.resp.resid, xlab = "diameter", col.int = NULL)
+arm::binnedplot(mod2_aug$s, mod2_aug$.resp.resid, xlab = "diameter", col.int = NULL)
+```
+
+**Task `r (task <- task + 1)`.** Now, add species as a predictor. After fitting this model, create a new augmented data frame and create binned residual plots for the fitted values and each predictor variable. In addition, calculate the mean of the response residuals for each species. (Look at your EDA notes to recall how we calculated means by groups. *Hint:* You can use the `mean()` function from {mosaic}.) Describe any potential issues you see.
+
+```{r}
+#| include: false
+mod2 <- glm(y ~ log(d) + s + spp, data = blowdown, family = "binomial")
+
+mod2_aug <- augment(mod2, blowdown) |> 
+  mutate(.resp.resid = resid(mod2, type = "response"))
+
+# Make the plot
+arm::binnedplot(mod2_aug$.fitted, mod2_aug$.resp.resid, xlab = "diameter", col.int = NULL)
+arm::binnedplot(mod2_aug$d, mod2_aug$.resp.resid, xlab = "diameter", col.int = NULL)
+arm::binnedplot(mod2_aug$s, mod2_aug$.resp.resid, xlab = "diameter")
+```
+
+
+## Measures of association
+
+Once you have verified that your model is valid, you might wish to determine how well the model describes the observed data. In linear regression we used $R^2$ as such measure. In logistic regression, Kuiper and Sklar recommend the use of a few association metrics to determine the degree of association between the model's predictions and the observed data. A better model should produce predictions that are more highly associated with the observed data.
+
+In order to obtain the three measures of association described in the textbook, we need to use a different function to fit our logistic regression model. We'll use the `lmr()` function in the {rms} package. For example, we can refit the regression model from the previous task using the below code:
+
+```{r eval=FALSE}
+lrm(y ~ log(d) + s + spp, data = blowdown)
+```
+
+
+**Task `r (task <- task + 1)`.** Run the above `lrm()` code and report the three measures of association described in the textbook and the video. 
+
+
+**Task `r (task <- task + 1)`.** Next, let's consider an expanded model with interactions between the three predictors that are included in the model thus far. Run the below code chunk to fit this model
+
+```{r}
+model4_glm <- glm(y ~ (log(d) + s + spp)^3, data = blowdown)
+```
+
+**Task `r (task <- task + 1)`.** Use `anova()` to run a drop-in deviance test comparing the model with and without the interaction. (Make sure you are using the two models fit using the `glm()` command.) What do you find?
+
+
+**Task `r (task <- task + 1)`.** The data set has `r nrow(blowdown)` rows, so we have enough observations to for statistically discernible "improvements" to the model to be very small boosts to the association. Remember that we prefer simpler models, so we would prefer the no interaction if the predictions and the observed data had roughly the same level of association as the more complex model. Refit the interaction model using `lrm()` and report the three measures of association. Do the interactions appear to substantially improve the association between the predictions and the observed data?
