@@ -42,7 +42,7 @@ Today, your first tasks are to conduct inference for this fitted model.
 
 :::{.callout-note}
 # Confidence intervals in R
-Wald-based confidence intervals can be constructed in R using the `confint.defaut()` function. You should pass in your fitted model to this function and can specify the confidence level using the `level` argument (be sure to enter a value between 0 and 1).
+Wald-based confidence intervals can be constructed in R using the `confint.default()` function. You should pass in your fitted model to this function and can specify the confidence level using the `level` argument (be sure to enter a value between 0 and 1).
 :::
 
 **Task `r (task <- task + 1)`.** Complete chapter 7 activity 12. "Calculate the odds ratio of a successful launch between 31$^\circ$F and 60$^\circ$F. Provide a confidence interval for this odds ratio and interpret your results." (Notice that this is a 29$^\circ$F increase in the temperature.) You can use a 95% confidence level for this problem.
