@@ -123,9 +123,11 @@ mod2_aug <- augment(mod2, blowdown) |>
   mutate(.resp.resid = resid(mod2, type = "response"))
 
 # Make the plot
-arm::binnedplot(mod2_aug$.fitted, mod2_aug$.resp.resid, xlab = "diameter", col.int = NULL)
+arm::binnedplot(mod2_aug$.fitted, mod2_aug$.resp.resid, xlab = "Fitted values", col.int = NULL)
 arm::binnedplot(mod2_aug$d, mod2_aug$.resp.resid, xlab = "diameter", col.int = NULL)
-arm::binnedplot(mod2_aug$s, mod2_aug$.resp.resid, xlab = "diameter")
+arm::binnedplot(mod2_aug$s, mod2_aug$.resp.resid, xlab = "severity", col.int = NULL)
+
+mean(.resp.resid ~ spp, data = mod2_aug)
 ```
 
 

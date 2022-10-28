@@ -32,9 +32,10 @@ table73 <- read.csv("https://aloy.rbind.io/kuiper_data/Table7.3.csv")
 
 To fit a binomial logistic regression model in R, we again use the `glm()` function; however, the response variable must now be a proportion and we must also specify the binomial denominators. Below is the basic recipe to fit this class of model:
 
-```{r}
+```{r tidy=TRUE}
 #| eval: false
-binom_glm <- glm(prop ~ x, data = df, family = "binomial", weights = denoms)
+binom_glm <- glm(prop ~ x, data = df, family = "binomial", 
+                 weights = denoms)
 ```
 
 where
