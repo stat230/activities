@@ -4,10 +4,10 @@ subtitle: "Logistic regression -- Stat 230"
 format:
   pdf:
     geometry:
-      - top=1in
-      - left=1in
-      - right=1in
-      - bottom=1in
+      - top=.85in
+      - left=.85in
+      - right=.85in
+      - bottom=.85in
 ---
 
 ```{r setup}
@@ -34,11 +34,8 @@ orobanche <- read.csv("http://aloy.rbind.io/data/orobanche.csv")
 The variables in the data set are:
 
 - `y`: count of seeds germinated
-
 - `n`: number of seeds
-
 - `variety`: either oa75 or oa73
-
 - `root`: either cucumber or bean
 
 
@@ -48,6 +45,7 @@ Notice that both explanatory variables are categorical (i.e., factors).
 
 To calculate a summary of counts for each combination of levels, use the commands `ftable()` and `xtabs()`
 ```{r}
+#| eval: false
 ftable(xtabs(cbind(y, n) ~ variety + root, data = orobanche))
 ```
 
