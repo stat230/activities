@@ -82,12 +82,45 @@ residualPlots(binom_glm, type = "deviance", smooth = FALSE)
 
 **Task `r (task <- task + 1)`.** Complete chapter 7 activity 27.
 
+```{r include=FALSE}
+# Pearson residuals will be in the .resid column
+binom_aug <- augment(binom_glm, type.residuals = "pearson")
+
+gf_qq(~.resid, data = binom_aug, ylab = "Pearson residuals", xlab = "Normal quantiles") |> gf_qqline()
+
+residualPlots(binom_glm, type = "pearson")
+```
+
+
 **Task `r (task <- task + 1)`.** Complete chapter 7 activity 28.
+
+```{r include=FALSE}
+# Pearson residuals will be in the .resid column
+binom_aug <- augment(binom_glm, type.residuals = "deviance")
+
+gf_qq(~.resid, data = binom_aug, ylab = "Deviance residuals", xlab = "Normal quantiles") |> gf_qqline()
+
+residualPlots(binom_glm, type = "deviance", smooth=FALSE)
+```
 
 ## Assessing the fit of a binomial model
 
 At the beginning of class we discussed the the deviance goodness-of-fit test that can be run on binomial logistic regression models. Let's use this test to assess our fitted logistic regression model. (Note: In this class we won't use the Pearson goodness-of-fit test or the Hosmer-Lemeshow tests.)
 
 **Task `r (task <- task + 1)`.** Complete chapter 7 activity 30. Be sure to state the hypotheses, test statistic, degrees of freedom, p-value, and a brief conclusion about the adequacy of your model. To help you organize your calculations, look at Table 7.4 and equation 7.26.
+
+```{r include=FALSE}
+dev_tab <- table73 |>
+  select(1:4) |>
+  mutate(total = Benign + Malignant,
+         pi.hat = predict(binom_glm, type = "response"),
+         expected.benign = total * (1 - pi.hat),
+         expected.malignant = total * pi.hat)
+
+d2 <- 2 * (sum(dev_tab$Malignant * log(dev_tab$Malignant/dev_tab$expected.malignant)) + sum(dev_tab$Benign * log(dev_tab$Benign/dev_tab$expected.benign)))
+
+1-pchisq(d2, df = 5 - 2)
+```
+
 
 **Task `r (task <- task + 1)`.** Verify your calculations using the output from `summary()` to run this goodness-of-fit test.
