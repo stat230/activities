@@ -1,0 +1,183 @@
+---
+title: "Key: Overdispersion and Quasibinomial Logistic Regression"
+subtitle: "Logistic regression -- Stat 230"
+format:
+  pdf:
+    geometry:
+      - top=.85in
+      - left=.85in
+      - right=.85in
+      - bottom=.85in
+---
+
+```{r setup}
+#| include: false
+library(ggformula)
+library(car)
+library(broom)
+library(dplyr)
+
+task <- 0
+```
+
+In this class, you learn about extra-binomial variation (a case of overdispersion) and how we can use quasibinomial logistic regression to adjust our inferences to handle this issue. This topic is not discussed in your book.
+
+
+## Data overview
+
+*Orobanche* is a genus of parasitic plants without chlorophyll that grow on the roots of flowering plants. In an experiment, seeds from two varieties, Orobanche aegyptiaca 75 and Orobanche aegyptiaca 73, where brushed with extract from either a cucumber root or a bean root. Researchers recorded the number of seeds that eventually germinated.
+
+```{r}
+orobanche <- read.csv("http://aloy.rbind.io/data/orobanche.csv")
+```
+
+The variables in the data set are:
+
+- `y`: count of seeds germinated
+- `n`: number of seeds
+- `variety`: either oa75 or oa73
+- `root`: either cucumber or bean
+
+
+Notice that both explanatory variables are categorical (i.e., factors). 
+
+**Task `r (task <- task + 1)`.** Does there appear to be a relationship between the proportion of seeds that germinate and variety? What about root? To answer this, I recommend looking at both a summary table and boxplots of the estimated proportion by each variable.
+
+To calculate a summary of counts for each combination of levels, use the commands `ftable()` and `xtabs()`
+```{r}
+#| eval: false
+ftable(xtabs(cbind(y, n) ~ variety + root, data = orobanche))
+```
+
+To create a `prop` column in the data set, you can run the below chunk:
+```{r}
+orobanche$prop <- orobanche$y/ orobanche$n
+```
+
+
+
+## Additive model
+
+To begin, let's fit an additive logistic regression model where `variety` and `root` are both included.
+
+```{r}
+oro_glm1 <- glm(y/n ~ variety + root, data = orobanche, family = binomial, weights = n)
+```
+
+**Task `r (task <- task + 1)`.** Perform a deviance goodness-of-fit test. What do you conclude?
+
+The deviance goodness-of-fit statistic is in the summary of the model:
+
+```{r}
+summary(oro_glm1)
+```
+
+We find the statistic is $D^2 = 39.686$. Then we used a chi-squared distribution with df = 18. To find the p-value we run:
+```{r}
+1 - pchisq(39.686, df = 18)
+```
+
+We have strong evidence that the model is not adequate ($D^2 = 39.686$, df = 18, $p$-value = 0.002).
+
+
+
+**Task `r (task <- task + 1)`.** Are there any concerning outliers? Check residual plots to investigate this.
+
+There don't appear to be any problematic outliers from the residual plot. Observation #15 is borderline influential based on Cook's distance, but we'll retain it for now.
+
+```{r}
+#| layout-ncol: 2
+#| fig-height: 5
+#| fig-width: 7
+#| out-width: 50%
+residualPlot(oro_glm1, type = "deviance", smooth = FALSE)
+influenceIndexPlot(oro_glm1, vars = "cook")
+```
+
+
+
+## Adding an interaction term
+
+You should have found evidence of lack of fit and that there were no concerning outliers, so we may be missing a term. The only other thing we can add here is an interaction. The below code chunk updates our first model to include an interaction term.
+
+```{r}
+oro_glm2 <- update(oro_glm1, . ~ . + variety:root)
+```
+
+**Task `r (task <- task + 1)`.** Perform a deviance goodness-of-fit test. What do you conclude?
+
+The deviance goodness-of-fit statistic is in the summary of the model:
+
+```{r}
+summary(oro_glm2)
+```
+
+We find the statistic is $D^2 = 33.278$. Then we used a chi-squared distribution with df = 17. To find the p-value we run:
+```{r}
+1 - pchisq(33.278, df = 18)
+```
+
+We have strong evidence that the model is not adequate ($D^2 = 39.686$, df = 18, $p$-value = 0.015).
+
+
+**Task `r (task <- task + 1)`.** Check the residual plots again to see if outliers are a problem.
+
+We don't have any concerns about outliers here.
+
+```{r}
+#| layout-ncol: 2
+#| fig-height: 5
+#| fig-width: 7
+#| out-width: 50%
+residualPlot(oro_glm2, type = "deviance", smooth = FALSE)
+influenceIndexPlot(oro_glm2, vars = "cook")
+```
+
+
+
+
+## Investigating over-dispersion
+
+Since there aren't any more terms we can add and outliers aren't a problem, we suspect over-dispersion. 
+
+**Task `r (task <- task + 1)`.** Do the *ad hoc* calculation of the estimate of the dispersion parameter. Is it "much" larger than 1?
+
+The *ad hoc* dispersion estimate is about two times larger than 1 (what we would expect).
+
+$\widehat{\psi} = \dfrac{\text{residual deviance}}{df} = \dfrac{33.278}{17} \approx `r (33.278 / 17 ) |> round(3)`$
+
+
+**Task `r (task <- task + 1)`.** The below code to fit the interaction model via quasilikelihood (i.e., this fits the quasibinomial model). How do the standard errors and test statistics change? Do any of the variables change in significance?
+
+The standard errors are larger, which reduce the magnitude of the test statistics. This increases the p-values, and we see that `root` is no longer appears to be associated with the log odds (after controlling for the other variables), and now there is weak evidence that the interaction term is needed.
+
+```{r}
+oro_glm3 <- glm(y/n ~ variety * root, data = orobanche, family = quasibinomial, 
+                weights = n)
+summary(oro_glm3)
+```
+
+**Task `r (task <- task + 1)`.** In the `summary()` output for `oro_glm3` there is a dispersion parameter given. Multiply the square root of this with the standard error of the interaction term in  `oro_glm2`. Compare this to the standard error of the interaction term in  `oro_glm3`. What do you notice?
+
+$SE_{\text{quasi}}(\widehat{\beta_3}) = \sqrt{\widehat{\psi}} SE(\widehat{\beta_3}) = \sqrt(1.861832) * 0.3064 \approx 0.4181$
+
+This is the SE given for the interaction term in   `oro_glm3`. Thus, we can see that $\sqrt{\widehat{\psi}}$ is how much we need to increase the variability of our estimates.
+
+
+
+## Comparing models
+
+Let's work with the quasibinomial version now. 
+
+
+**Task `r (task <- task + 1)`.** Determine if we can remove the `variety:root` interaction from the model. To do this, fit the reduced quasibinomial logistic regression model and then use the `anova()` command to compare the models, specifying `test = "F"`. (Remember that in the quasibinomial case, the drop in deviance test now uses the F distribution!)
+
+There is weak evidence of an interaction effect between variety and root ($F=6.4081$, df = $1, 18$, $p$-value = 0.081).
+
+```{r}
+oro_glm4 <- glm(y/n ~ variety + root, data = orobanche, family = quasibinomial, 
+                weights = n)
+
+anova(oro_glm4, oro_glm3, test = "F")
+```
+

@@ -1,0 +1,61 @@
+---
+title: "Modeling Counts with the Poisson Distribution"
+subtitle: "Poisson regression -- Stat 230"
+format:
+  pdf:
+    geometry:
+      - top=.85in
+      - left=.85in
+      - right=.85in
+      - bottom=.85in
+---
+
+```{r setup}
+#| include: false
+library(ggformula)
+library(car)
+library(broom)
+library(dplyr)
+
+task <- 0
+```
+
+In this class...
+
+## Reviewing the binomial model
+
+**Task `r (task <- task + 1)`.** Complete chapter 8 activity 9. GIVE CODE BELOW!!
+
+**Task `r (task <- task + 1)`.** Complete chapter 8 activity 10.
+
+**Task `r (task <- task + 1)`.** Complete chapter 8 activities 11-12 (asking about Figure 8.2).
+
+
+
+:::{.callout-important}
+## STOP HERE! 
+We'll review the Poisson distribution as a class before moving on.
+:::
+
+
+## The Poisson model for count data
+
+
+**Task `r (task <- task + 1)`.** Complete chapter 8 activities 13-4 (asking about Figure 8.2).
+
+
+
+:::{.callout-important}
+## STOP HERE! 
+We'll discuss how to construct a Poisson regression model together as a class.
+:::
+
+
+## Fitting a Poisson regression model
+
+
+**Task `r (task <- task + 1)`.** Complete chapter 8 activity 15.
+
+**Task `r (task <- task + 1)`.** Complete chapter 8 activity 16.
+
+SHOULD I ADD ANYMORE QUESTIONS?? REVISIT THIS ISSUE AFTER COMPLETING MY NOTES/SLIDES.
