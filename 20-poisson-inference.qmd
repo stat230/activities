@@ -36,10 +36,11 @@ cancer <- read.csv("http://aloy.rbind.io/data/CancerCluster.csv")
 Last class we fit a simple Poisson regression model (i.e., we used only a single predictor variable) using the below code:
 
 ```{r}
-cancer_mod <- glm(Cases ~ MedianAge, data = cancer, family = "poisson", offset = log(Person.years))
+cancer_mod <- glm(Cases ~ MedianAge, data = cancer, family = "poisson",
+                  offset = log(Person.years))
 ```
 
-To begin the day, you'll fit a Poisson regression model with multiple predictor variables. To do this, you adapt the formula to add addition predictor and interaction terms just like you did for multiple linear and logistic regression models.
+To begin the day, you'll fit a Poisson regression model with multiple predictor variables. To do this, you adapt the formula to add additional predictor and interaction terms, just like you did for multiple linear and logistic regression models.
 
 **Task `r (task <- task + 1)`.** Complete activity 22 in Chapter 8.
 
@@ -54,7 +55,7 @@ To begin the day, you'll fit a Poisson regression model with multiple predictor 
 
 ## Conducting inference
 
-The good news is that inference for Poisson regression uses the same tools (and code!) as inference for logistic regression, it's just the interpretations that differ a bit due to the link function. So, we'll review the use of Wald's test, Wald intervals, and likelihood ratio test (LRTs).
+The good news is that inference for Poisson regression uses the same tools (and code!) as inference for logistic regression, it's just the interpretations (of intervals) that differ a bit due to the link function. So, we'll review the use of Wald's test, Wald intervals, and likelihood ratio test (LRTs).
 
 **Task `r (task <- task + 1)`.** Complete activity 30 in Chapter 8. To get the summary table for Wald's test, you can either use the `summary()` function or the `tidy()` command from {broom}.
 
@@ -65,13 +66,13 @@ The good news is that inference for Poisson regression uses the same tools (and 
 
 ## Model checking
 
-The model-checking toolkit is also very similar for Poisson regression and binomial logistic regression. Specifically, we'll use deviance residuals and the deviance goodness-of-fit test.
+The model-checking toolkit is also very similar for Poisson regression and binomial logistic regression. Specifically, we'll use deviance residual plots and the deviance goodness-of-fit test.
 
 **Task `r (task <- task + 1)`.** Complete activity 34 in Chapter 8. To construct deviance residual plot, we can run the command 
 ```{r eval=FALSE}
 residualPlots(model, type = "deviance)
 ```
-from the {car} package (substitute your model's name in for `model`). The deviance goodness-of-fit test statistic is reported in the same place on the `summary()` as it was in logistic regression.
+from the {car} package, substituting your model's name in for `model`. The deviance goodness-of-fit test statistic is reported in the same place on the `summary()` as it was in logistic regression, and you'll need to use the chi-square distribution to find the p-value.
 
 
 
