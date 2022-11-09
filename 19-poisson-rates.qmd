@@ -18,6 +18,11 @@ library(broom)
 library(dplyr)
 library(fontawesome)
 
+cancer <- read.csv("http://aloy.rbind.io/data/CancerCluster.csv")
+bga <- dplyr::filter(cancer, Location == "BGA")
+cancer_mod <- glm(Cases ~ MedianAge, data = bga, family = "poisson",
+                  offset = log(Person.years))
+
 task <- 0
 ```
 
@@ -78,4 +83,5 @@ where you need to replace `y`, `x`, `df`, and `exposures` with the appropriate c
 
 
 **Task `r (task <- task + 1)`.** Complete chapter 8 activity 16.
+
 

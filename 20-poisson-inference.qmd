@@ -48,6 +48,13 @@ To begin the day, you'll fit a Poisson regression model with multiple predictor 
 
 **Task `r (task <- task + 1)`.** Complete activity 27 in Chapter 8.
 
+```{r include=FALSE}
+cancer_mod <- glm(Cases ~ MedianAge * Location, data = cancer, family = "poisson",
+                  offset = log(Person.years))
+tidy(cancer_mod, conf.int = TRUE)
+```
+
+
 **Task `r (task <- task + 1)`.** Complete activity 28 in Chapter 8.
 
 **Task `r (task <- task + 1)`.** Complete activity 29 in Chapter 8.
@@ -75,4 +82,8 @@ residualPlots(model, type = "deviance)
 from the {car} package, substituting your model's name in for `model`. The deviance goodness-of-fit test statistic is reported in the same place on the `summary()` as it was in logistic regression, and you'll need to use the chi-square distribution to find the p-value.
 
 
+```{r include=FALSE}
+cancer_mod_quad <- glm(Cases ~ MedianAge * Location + I(MedianAge^2), data = cancer, 
+                       family = "poisson", offset = log(Person.years))
+```
 
