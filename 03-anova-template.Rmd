@@ -1,8 +1,12 @@
 ---
-title: "ANOVA: Comparing 3+ Population Means"
-date: "2022-09-16"
-output: html_document
+output: pdf_document
 ---
+
+# One-Way ANOVA to Compare Population Means
+
+## Names:
+
+### Stat 230, Winter 2024
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -71,6 +75,4 @@ Write your comparison here...
 
 Write your interpretation of the diagnostic plots here...
 
-### 27.
-
-Write your comparison here...
+### 

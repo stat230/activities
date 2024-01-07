@@ -1,5 +1,5 @@
 ---
-title: "ANOVA: Comparing 3+ Population Means"
+title: "One-Way ANOVA to Compare Population Means"
 format:
   pdf:
     geometry:
@@ -9,7 +9,7 @@ format:
       - bottom=.75in
 ---
 
-<!-- # Overview of R Markdown files -->
+\vspace{-.2in}
 
 In this class, you will work with your group to explore one-way ANOVA models by completing **activities 19-27 from the textbook**. While you work through this activity, make sure that all group members are engaged and contribute ideas, and also follow the code. The [R Manual](https://stat230.github.io/r-manual-kuiper/02-chapter02.html) has useful R code for today's activities.
 
@@ -18,19 +18,165 @@ In this class, you will work with your group to explore one-way ANOVA models by 
 
 As you saw before class, the ANOVA model is given by 
 $$y_{ij} = \mu + \alpha_i + \varepsilon_{ij}, \quad \text{for }i = 1, \ldots, I \quad \text{and } j=1, 2, \ldots, n_i, \quad \text{where } \varepsilon_{ij} \overset{iid}{\sim} \mathcal{N}(0, \sigma^2)$$
-Once we have data in hand, we can use it to estimate the model parameters of interest. When interest centers on discerning a different between group means the **effects**, $\alpha_i$, are of primary interest.
-
-**Complete activities 19-22**. These activities lead you through estimating the effects (or effect sizes) for the two treatment groups (color distractor and standard game) and visualizing the fitted model using a **main effects plot**. Activity 22 then has you calculate a residual.
+Once we have data in hand, we can use it to estimate the model parameters of interest. When interest centers on discerning a difference between group means the **effects**, $\alpha_i$, are of primary interest. Today's activity will guide you through an initial one-way ANOVA model.
 
 
-The necessary assumptions/conditions for the one-way ANOVA model are:
+To begin, load the `Games1` data set:
+
+```{r}
+games1 <- read.csv("https://aloy.rbind.io/kuiper_data/Games1.csv")
+```
+
+You should also load the **ggformula** and **mosaic** libraries.
+
+```{r}
+#| message: false
+#| warning: false
+library(ggformula)
+library(mosaic)
+```
+
+
+### Activity 19.
+
+Use the `mean()` function with appropriate formulas to calculate $\overline{y}_{..}$, $\overline{y}_{1.}$, and $\overline{y}_{2.}$.
+
+### Activity 20.
+
+Using the sample means you just calculated, estimate the effect sizes, $\alpha_i$, for the color distractor game and the standard game.
+
+
+### Activity 21.
+
+A **main effects** plot simply plots the average for each factor level.
+
+To create the main effects plot of game type, need to plot the average response for each factor level. You calculated these group means in Activity 19 above. To create this plot, we need to first create a data frame with two columns: the group labels and the group means.
+
+```{r}
+group_means <- mean(Time ~ Type, data = games1)
+main_effects <- data.frame(
+  group = names(group_means), # use group names from the group means
+  avg = group_means           # the group means
+)
+```
+
+Next, we can use `gf_point()` and `gf_line()` to draw the plot:
+
+```{r}
+#| eval: false
+main_effects |>                   # take the effects data
+  gf_point(avg ~ group) |>        # and draw the points
+  gf_line(avg ~ group, group = 1) # and then connect the points
+```
+
+In the `gf_line()` command above we needed to add group = 1 because we used the original group variable, not the indicator (dummy) variable. If instead we had used 0s and 1s, this would not have been necessary.
+
+### Activity 22.
+
+Calculate the residual for the 20th observation from the standard group, $\widehat{\varepsilon}_{2, 20}$.
+
+In R you can extract the 20th observation for the standard group by first extracting all of the observations from that group, and then extracting the 20th observation.
+
+```{r}
+#| eval: false
+standard <- filter(games1, Type == "Standard") # extract standard group 
+standard$Time[20] # extract 20th value from Time column
+```
+
+
+### Activity 23.
+
+Before class, you saw the formulas to calculate the F-statistic.
+
+A one-way ANOVA model is fit using the `aov()` command in R. The ANOVA table (without the Total row) is produced using the summary() command on the fitted model:
+
+```{r}
+#| eval: false
+games_anova <- aov(Time ~ Type, data = games1)
+summary(games_anova)
+```
+
+Report the value of the F-statistic, the degrees of freedom, and the p-value. Based on your results, draw a conclusion from this study.
+
+### Activity 24.
+
+Below is output from a two-sample t-test and the regression model for this same problem. How does the test statistic and p-value compare from the one-sample ANOVA model compare to  those you found for the two-sample t-test and the slope of the regression model?
+
+:::: {layout-ncol=2}
+
+::: {}
+Two-sample model
+
+```
+data:  Time by Type
+t = 2.2862, df = 38, p-value = 0.02791
+alt. hypothesis: true difference != 0
+95 percent confidence interval:
+ 0.2920254 4.8079746 
+```
+
+
+:::
+
+::: {}
+Regression model
+
+```
+Coefficients:
+             Estimate Std. Error t value Pr(>|t|)    
+(Intercept)   38.1000     0.7887  48.308   <2e-16 
+TypeStandard  -2.5500     1.1154  -2.286   0.0279 
+```
+
+:::
+::::
+
+
+### Activity 25.
+
+Take the square root of the F-statistic you found via one-way ANOVA. Does this look familiar? Explain.
+
+The `sqrt()` function takes the square root of a number in R.
+
+### Activity 26.
+
+Recall that the necessary conditions for the one-way ANOVA model are:
 
 1. the error terms are i.i.d.
 1. the error terms follow a normal distribution
 1. the error terms have mean 0
 1. the population variance is the same for each group (i.e., within each factor level)
 
+To check these assumptions, let's explore the residuals. You can calculate the residuals from an ANOVA object using the `resid()` function:
+
+```{r}
+#| eval: false
+games_resids <- resid(games_anova)
+```
+
+Now, check the model assumptions by
+
+- creating a histogram of the residuals,
+- creating a plots of the residuals vs. the type of game, and
+- creating a plot of the residuals against the order in which the data were collected.
+
+You can create these plots with the following code:
+
+```{r}
+#| eval: false
+
+# Histogram of the residuals with 15 bins
+gf_histogram(~games_resids, bins = 15, xlab = "Residuals")
+
+# Plot of the residuals vs. type of game
+gf_jitter(games_resids ~ Type, data = games1, width = 0.1, ylab = "Residual") %>%
+  gf_hline(yintercept = ~0, color = "blue")
+
+# Plot of the residuals vs. order collected
+gf_point(games_resids ~ studentID, data = games1, ylab = "Residuals", xlab = "Order") %>%
+  gf_line()  %>%
+  gf_hline(yintercept = ~0, color = "blue")
+```
 
 
-
-Shonda recommends 16-27...
+Are the residuals approximately normal? Are the residual variances (spreads) similar for the two factor levels? Are there patterns in the residual plots that might indicate the residuals are not iid?
