@@ -1,7 +1,7 @@
 ---
 title: "Models to Compare Two Population Means"
-date: "2022-09-14"
-output: html_document
+date: "Winter 2024"
+output: pdf_document
 ---
 
 ```{r setup, include=FALSE}
@@ -35,56 +35,7 @@ Write your interpretation here...
 
 
 
-## Part 2: Statistical models for the two-sample t-test
-
-### Task 2. 
-
-```{r sample-means}
-# Delete this line and put your code here
-```
-
-
-
-## Part 3: Checking assumptions
-
-
-### 7.
-
-```{r reisdual-histogram}
-# Delete this line and put your code here
-```
-
-Write your interpretation here...
-
-### 8.
-
-```{r equal-variances}
-# Delete this line and put your code here
-```
-
-Write your interpretation here...
-
-### 9.
-
-```{r resid-StudentID}
-# Delete this line and put your code here
-```
-
-Write your interpretation here...
-
-### 10.
-
-```{r t-test}
-# Delete this line and put your code here
-```
-
-Write your interpretation here...
-
-
-
-## Part 4: Fitting a regression model to compare means
-
-
+## Part 2: Fitting a regression model to compare means
 
 ### 11.
 
@@ -111,7 +62,7 @@ Write your interpretation here...
 
 
 
-## Part 5: Check the model 
+## Part 3: Check the model
 
 
 ### 14.
@@ -125,7 +76,7 @@ Write your interpretation here...
 
 
 
-## Part 6: Communicate the results
+## Part 4: Communicate the results
 
 ### 15.
 
@@ -135,3 +86,9 @@ Write your interpretation here...
 
 Write your interpretation here...
 
+
+## Part 5: Comparing the results to the two-sample t-test
+
+### Task 5.
+
+Write your answer here...
