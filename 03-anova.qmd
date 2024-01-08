@@ -11,7 +11,7 @@ format:
 
 \vspace{-.2in}
 
-In this class, you will work with your group to explore one-way ANOVA models by completing **activities 19-27 from the textbook**. While you work through this activity, make sure that all group members are engaged and contribute ideas, and also follow the code. The [R Manual](https://stat230.github.io/r-manual-kuiper/02-chapter02.html) has useful R code for today's activities.
+In this class, you will work with your group to explore one-way ANOVA models by completing **activities 19-26 from the textbook**. While you work through this activity, make sure that all group members are engaged and contribute ideas, and also follow the code. The [R Manual](https://stat230.github.io/r-manual-kuiper/02-chapter02.html) has useful R code for today's activities.
 
 
 ## The ANOVA Model
