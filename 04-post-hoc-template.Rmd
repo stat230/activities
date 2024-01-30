@@ -1,0 +1,88 @@
+---
+output: pdf_document
+---
+
+# Post-Hoc Analysis for One-Way ANOVA
+
+## Names:
+
+### Stat 230, Winter 2024
+
+```{r setup, include=FALSE}
+library(mosaic)
+library(ggformula)
+```
+
+The data set can be loaded using the code
+
+```{r}
+corn <- read.csv("https://aloy.rbind.io/data/cornplot.csv")
+```
+
+## EDA
+
+To begin, explore the data set by completing the following tasks:
+
+### Task 1.
+
+Create an individual values plot of the data. Comment on the distribution within each treatment group. Are there outliers? Are the distributions skewed? Are there unequal variances? 
+
+
+### Task 2.
+
+Reflecting on your answers to task 1, are you worried about any of the conditions necessary for one-way ANOVA?
+
+## ANOVA
+
+Now, let's use the one-way ANOVA model to conduct a first analysis.
+
+### Task 3. 
+
+Use R to fit the one-way ANOVA model for this experiment. Remember that we use the `aov()` function to fit the model and the `summary()` function to print the ANOVA table.
+
+```{r}
+# Fill in the blanks to fit the ANOVA model
+corn_anova <- aov(___ ~ factor(___), data = ___)
+summary(___)
+```
+
+
+
+### Task 4. 
+
+The ANOVA model predicts that every point in a treatment group will be at the group mean. Use the below code to create a plot of the fitted ANOVA model. Comment on the fit of this model to your data.
+
+```{r}
+group_means <- corn |> 
+  group_by(Treatment) |> 
+  summarize(avg = mean(Weight))
+
+gf_jitter(Weight ~ Treatment, data = corn, width= 0.1) |>
+  gf_summary(fun.y = "mean", color = "darkorange", size = 3, geom = "point")
+```
+
+
+### Task 5. 
+
+Construct a plot of the residuals vs. the explanatory variable (Treatment) and a histogram of the residuals for the ANOVA model. Comment on the fit of the ANOVA model.
+
+
+## Post-hoc analysis
+
+
+
+### Task 6.  
+
+Calculate 95% confidence intervals for the 10 pairwise comparisons of each of the treatments using the `TukeyHSD()` command.
+
+```{r}
+TukeyHSD(___, conf.level = ___)
+```
+
+
+
+### Task 7.
+
+Summarize, broadly, what these intervals tell you about how the treatments compare to each other.
+
+

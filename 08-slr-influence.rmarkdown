@@ -18,6 +18,7 @@ library(broom)
 taskno <- 0
 ```
 
+
 \vspace{-.7in}
 
 ## Exploring outliers and influential points
@@ -30,18 +31,23 @@ Now, let's consider how outliers and influential points can impact the fitted re
 
 To begin, load the data.
 
+
 ```{r}
 bonds <- read.csv("https://aloy.rbind.io/data/bonds.csv")
 ```
 
+
 **Task `r (taskno <- taskno + 1)`.** Fit a simple linear regression model to predict the bid price given the coupon rate of U.S. Treasury bonds. Write down the fitted model equation.
+
 ```{r}
 #| include: false
 fm <- lm(BidPrice ~ CouponRate, data = bonds)
 ```
 
 
+
 **Task `r (taskno <- taskno + 1)`.** Create a scatterplot of bid price against the coupon rate and superimpose the fitted regression line. Do you see any potential outliers? If so, identify what rows of the data set correspond to these outliers. (Hint: Click on the name of the data set in the "Environment" tab to open a spreadsheet of the data.)
+
 
 ```{r}
 #| include: false
@@ -51,7 +57,9 @@ gf_point(BidPrice ~ CouponRate, data = bonds, xlab = "Coupon rate", ylab = "Bid 
 ```
 
 
+
 **Task `r (taskno <- taskno + 1)`.** Create a plot of the standardized residuals vs. the fitted values. Do you see any potential outliers? If so, identify what rows of the data set correspond to these outliers. Are they the same rows? (Hint: use the `residualPlot()` function from the {car} package with `type = "rstandard"` to create the plot. To calculate the residuals use `rstandard(fm)`, where `fm` is the name of the fitted regression model.)
+
 
 ```{r}
 #| include: false
@@ -59,6 +67,7 @@ residualPlot(fm, quadratic = FALSE, type = "rstandard")
 resid_df <- augment(fm)
 # Potential Outliers are 13, 35
 ```
+
 
 **Task `r (taskno <- taskno + 1)`.** Create an index plot of the leverage values for each observation. You can do this from the augmented data frame, but a quicker way is to use the `infIndexPlot()` function in the {car} package. `infIndexPlot()` requires that you pass in the fitted regression model as well as the influence diagnostic you want to plot. Use the argument `vars = "hat"` to specify leverage. Identify the high leverage cases (the row numbers are printed for "auto detected" high leverage points).
 
@@ -69,6 +78,7 @@ resid_df <- augment(fm)
 
 
 **Task `r (taskno <- taskno + 1)`.** Refit the model without the influential points you identified in Task 6. To do this, add a `subset` argument to `lm()` as seen below. Specify the row numbers in the blank (this creates a vector of row numbers to delete). How much did the regression coefficients change?
+
 
 ```{r}
 #| eval: false
@@ -81,12 +91,14 @@ no_influential <- lm(BidPrice ~ CouponRate, data = bonds, subset = -c(___))
 no_influential <- lm(BidPrice ~ CouponRate, data = bonds, subset = -c(13, 35))
 ```
 
+
 **Task `r (taskno <- taskno + 1)`.**  Are we done? Check the residual plots and recreate the influence index plots you considered in Tasks 4 and 6. Do any additional points cause concern after your have already deleted a few points?
 
 
 ## Should we delete the outliers/influential points?
 
 As I discussed in the daily prep videos, it is not always wise to delete outliers and influential points. While this can improve the fit of your model, you might be deleting important information about your population. Of course, if a data entry error was made, then it should be fixed and the analysis should be rerun. In other situations, I recommend following the advice from the flow chart that Ramsey and Schafer include in *The Statistical Sleuth*.
+
 
 ```{r}
 #| echo: false

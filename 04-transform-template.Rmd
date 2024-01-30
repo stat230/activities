@@ -1,7 +1,7 @@
 ---
 title: "Model Diagnostics and Remedial Measures"
-date: "2022-09-19"
-output: html_document
+date: "Winter 2024"
+output: pdf_document
 ---
 
 ```{r setup, include=FALSE}
@@ -38,40 +38,17 @@ Write your answer here...
 Write your answer here...
 
 
-### Activity 29
-
-```{r}
-normal <- read.csv("https://aloy.rbind.io/kuiper_data/Normal.csv")
-```
-
-#### a.
-
-```{r 29a}
-# Delete this comment and put your code here
-```
-
-Write your answer here...
-
-
-#### b.
-
-```{r 29b}
-# Delete this comment and put your code here
-```
-
-Write your answer here...
-
-
-#### c.
-
-```{r 29c}
-# Delete this comment and put your code here
-```
-
-Write your answer here...
 
 
 ### Exercise E.10
+
+Here is code to calculate the residuals from the one-way ANOVA model.
+
+```{r}
+games_anova <- aov(Time ~ Type, data = games1)
+games_resid <- resid(games_anova)
+```
+
 
 #### a.
 
@@ -93,9 +70,6 @@ Write your answer here...
 
 #### c.
 
-```{r e10c}
-# Delete this comment and put your code here
-```
 
 Write your answer here...
 
@@ -105,20 +79,7 @@ Write your answer here...
 
 ```{r}
 emissions <- read.csv("https://aloy.rbind.io/kuiper_data/Emissions.csv")
-
-sub_emissions <- emissions |> 
-  filter(Year == "1963-1967" | Year == "1970-1971")
 ```
-
-
-#### c.
-
-```{r 31c}
-# Delete this comment and put your code here
-```
-
-Write your answer here...
-
 
 
 #### d.
@@ -130,10 +91,22 @@ Write your answer here...
 Write your answer here...
 
 
+#### e.
+
+```{r 31e}
+# Delete this comment and put your code here
+```
+
+Write your answer here...
+
+
 
 ### Activity B
 
+This code just creates the `y1` and `y2` samples you'll use in the activity.
 ```{r}
+sub_emissions <- emissions |>
+     filter(Year == "1963-1967" | Year == "1970-1971")
 y1 <- sub_emissions |> 
   filter(Year == "1963-1967") |> 
   pull(Emissions)
@@ -182,25 +155,3 @@ Write your answer here...
 
 Write your answer here...
 
-
-
-
-### Activity C
-
-#### Transforming y1
-
-```{r ActC-y1}
-# Delete this comment and put your code here
-```
-
-#### Transforming y2
-
-```{r ActC-y2}
-# Delete this comment and put your code here
-```
-
-#### Transforming y3
-
-```{r ActC-y3}
-# Delete this comment and put your code here
-```

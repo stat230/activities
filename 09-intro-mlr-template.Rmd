@@ -1,7 +1,6 @@
 ---
 title: "Fitting and Interpreting MLR Models"
-date: "2022-10-05
-output: html_document
+output: pdf_document
 ---
 
 ```{r setup, include=FALSE}
@@ -29,4 +28,3 @@ output: html_document
 
 ## Task 9
 
-## Task 10

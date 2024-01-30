@@ -19,6 +19,7 @@ library(dplyr)
 library(GGally)
 ```
 
+\vspace{-0.7in}
 
 In this class, you will begin to explore how to add additional explanatory variables into a regression model in order to explain (or control) more of the variation in the response. 
 
@@ -32,16 +33,16 @@ cars <- read.csv("https://aloy.rbind.io/kuiper_data/cars.csv")
 
 ## Fitting multiple linear regression (MLR) models
 
-Before fitting your regression model it can be useful to explore the data in hand. With a large number of predictors creating individual scatterplots is tedious. A solution is to create a *scatterplot matrix*. There are two functions you can use to create scatterplot matrices in R. The "quick" function is `pairs()`. Before we can create a scatterplot matrix, we should remove any categorical variables. The code below removes the `Make`, `Model`, `Trim`, `Type`, `Cruise`, `Sound`, and `Leather` columns using the `select` function and then passes the result into `pairs()`. Notice that a minus sign tells R to omit the column.
+Before fitting your regression model it can be useful to explore the data in hand. With a large number of predictors, creating individual scatterplots is tedious. A solution is to create a *scatterplot matrix*. There are two functions you can use to create scatterplot matrices in R. The "quick" function is `pairs()`, which uses a formula interface to select the variables to include in the scatterplot matrix. Notice, however, that the formula is one sided, so all of the variable names are placed to the right of the `~`.
 
 ```{r eval=FALSE}
 # Load the dplyr package in your setup code chunk to get select()
-cars |>
-  select(-Make, -Model, -Trim, -Type, -Cruise, -Sound, -Leather) |> 
-  pairs()
+# cars |>
+#   select(-Make, -Model, -Trim, -Type, -Cruise, -Sound, -Leather) |> 
+  pairs(~ Price + Mileage + Cyl + Liter + Doors, data = cars)
 ```
 
-If you want a slightly "nicer" version that includes univariate density curves  and correlation coefficients is made using `ggpairs()` in the {GGally} package.
+If you want a slightly "nicer" version that includes univariate density curves  and correlation coefficients, then you can use the `ggpairs()` function found in the {GGally} package. Before we can create a scatterplot matrix, we should remove any categorical variables. The code below removes the `Make`, `Model`, `Trim`, `Type`, `Cruise`, `Sound`, and `Leather` columns using the `select` function and then passes the result into `pairs()`. Notice that a minus sign tells R to omit the column.
 
 ```{r eval=FALSE}
 # Load GGally in the setup chunk!
@@ -50,7 +51,7 @@ cars |>
   ggpairs()
 ```
 
-What you will notice is that the default scatterplot matrix doesn't place `Price` on the y-axis in most of the plots. To adjust the order the variables are displayed, add the `columns` argument. This also allows us to select variables within the plotting function:
+What you will notice is that the default scatterplot matrix from `ggpairs()` doesn't place `Price` on the y-axis in most of the plots. To adjust the order the variables are displayed, add the `columns` argument. This also allows us to select variables within the plotting function:
 
 ```{r eval=FALSE}
 cars |> ggpairs(columns = c("Mileage", "Cyl", "Liter", "Doors", "Price"))
@@ -79,16 +80,16 @@ cars_lm <- lm(Price ~ Mileage + Cyl + Liter + Doors, data = cars)
 * the slope for `Mileage`
 * the slope for `Doors` (think carefully whether you want a 1-door increase here, or some other unit increase)
 
-**Task 4.** To print the table of regression coefficients and the results of a t-test for each you can use the `summary()` command. This is a "quick" way to format this table, but sometimes it prints too much information. If you want to focus only on the coefficient table, using the `tidy()` command in the {broom} package is a better function. Based on this table, which variables appear to be associated with the price?
+**Task 4.** To print the table of regression coefficients and the results of a t-test for each coefficient you can use the `summary()` command. This is a "quick" way to print the table, but it prints too much information if you only want to focus on the coefficients. In this case, the `tidy()` command in the {broom} package is a better function. Based on this table, which variables appear to be associated with the price?
 
 ```{r}
 #| eval: false
-# Load the broom package in the setup chunk!
+# Load the broom package in the setup chunk first!
 tidy(cars_lm)
 ```
 
 
-**Task 6.** To calculate confidence intervals for each regression coefficient we still use the `confint()` command. Remember that the `level` argument can be set to change from the default 95% confidence level. Use `confint()` to calculate 90% confidence intervals for each regression coefficient. Interpret the interval for `Mileage` in context.
+**Task 5.** To calculate confidence intervals for each regression coefficient we still use the `confint()` command. Remember that the `level` argument can be set to change from the default 95% confidence level. Use `confint()` to calculate 90% confidence intervals for each regression coefficient. Interpret the interval for `Mileage` in context.
 
 ```{r}
 #| include: false
@@ -96,14 +97,14 @@ tidy(cars_lm)
 confint(cars_lm, level = 0.9)
 ```
 
-**Task 7.** How much variability in `Price` is explained by this multiple regression model?
+**Task 6.** How much variability in `Price` is explained by this multiple regression model?
 
 
 ## Checking model assumptions
 
 Now that you have fit your multiple regression model we need to check whether the assumptions are reasonably satisfied.
 
-**Task 8.** (Adaptation of Activity 7.) To create plots of the residuals vs. the fitted values and each explanatory variables we can use the `residualPlots()` function in the {car} package. 
+**Task 7.** (Adaptation of Activity 7.) To create plots of the residuals vs. the fitted values and each explanatory variable we use the `residualPlots()` function in the {car} package. 
 
 ```{r}
 #| eval: false
@@ -113,12 +114,36 @@ residualPlots(cars_lm, type = "rstandard", tests = FALSE, quadratic = FALSE)
 
 When we assess the assumptions using residual plots in multiple regression we interpret the plots just as we do in simple linear regression, we just need to look at more plots!
 
+:::{.callout-note}
+## Layout of reisudal plots
+
+If you have a large number of residual plots, or just want to arrange them on the page differently, the `layout` argument can be added to the `residualPlots()` command. For example, to have 2 rows and three columns of plots, we add `layout(2, 3)`.
+
+```{r}
+#| eval: false
+residualPlots(cars_lm, type = "rstandard", tests = FALSE, quadratic = FALSE, 
+              layout = c(2, 3))
+```
+
+You can also control which residual plots are displayed using the `terms` argument. This might be necessary if you have a very large number of predictors. For example, we can create one set of residual plots with `Mileage` and `Cyl` and another with `Liter` and `Doors` using these two commands. Notice that we again use a one-sided formula to select the terms.
+
+```{r}
+#| eval: false
+residualPlots(cars_lm, type = "rstandard", tests = FALSE, quadratic = FALSE, 
+              terms = ~Mileage + Cyl)
+residualPlots(cars_lm, type = "rstandard", tests = FALSE, quadratic = FALSE, 
+              terms = ~Liter + Doors, fitted = FALSE)
+```
+
+In the second command, we also add `fitted = FALSE` so that the plot of the standardized residuals vs. fitted values is not reproduced.
+:::
+
 (a) Based on these residual plots, does the assumption of linearity appear to be satisfied?
 
-(b) Based on these residual plots, does the assumption of constant error variance appear to be satisfied or is there evidence of heteroscedasticity?
+(b) Based on these residual plots, does the assumption of constant error variance appear to be satisfied or is there evidence of heteroscedasticity (which is another word for non-constant error variance)?
 
 
-**Task 9.** Now, create a normal Q-Q plot of the standardized residuals using the `qqPlot()` command in the {car} package. Do the residuals appear to follow a normal distribution?
+**Task 8.** Now, create a normal Q-Q plot of the standardized residuals using the `qqPlot()` command in the {car} package. Do the residuals appear to follow a normal distribution?
 
 ```{r}
 #| eval: false
@@ -126,4 +151,4 @@ qqPlot(cars_lm, type = "rstandard", distribution = "norm")
 ```
 
 
-**Task 10.** You should have detected a couple violations of the assumptions required for the multiple regression model to be valid. Apply a logarithmic transformation (your book uses `log10`) to `Price` and refit the multiple linear regression model. Create the same set of residual plots as above, has the transformation helped remedy the model violations?
+**Task 9.** You should have detected a couple violations of the assumptions required for the multiple regression model to be valid. Apply a logarithmic transformation (your book uses `log10`) to `Price` and refit the multiple linear regression model. Create the same set of residual plots as above, has the transformation helped remedy the model violations?

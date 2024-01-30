@@ -1,7 +1,7 @@
 ---
 title: "Prediction for Simple Linear Regression"
-date: "2022-09-26"
-output: html_document
+date: "Winter 2024"
+output: pdf_document
 ---
 
 ```{r setup, include=FALSE}
@@ -13,74 +13,49 @@ library(ggformula)
 cars <- read.csv("https://aloy.rbind.io/kuiper_data/Cars.csv")
 ```
 
-## Task 1
 
-```{r scatterplot}
-# Delete this comment and put your code here
+# Part I
+
+Here is code to recreate figure 3.1 from the textbook:
+
+```{r warning=FALSE}
+gf_point(Price ~ Mileage, data = cars) |> # create the scatterplot, and then
+  gf_lm()                                 # add the fitted regression line
 ```
 
-Write your answer here...
+
+## Task 1
+
+Fit the model and print the summary, then identify the required parts of the summary (no need to show that you identified them here.)
+
+```{r fit-model}
+# Delete this comment and put your code here
+```
 
 
 ## Task 2
 
-```{r fit-model}
-# Delete this comment and put your code here
-```
-
-Write your answer here...
+Write your interpretations here...
 
 
 ## Task 3
 
-Write your interpretations here...
+Write your interpretation here...
 
 
 ## Task 4
 
-Write your interpretation here...
+Write your answer here...
 
 
-## Task 5 
+## Task 5
 
 Write your answer here...
 
+
+# Part II
 
 ## Task 6
-
-```{r post-hoc-intervals, error=FALSE}
-# Fill in the blank with your scatterplot code
-___ |> gf_lm()
-```
-
-
-## Task 7
-
-```{r fit-model}
-# Remember R can be a big calculator
-```
-
-Write your answer here...
-
-
-
-## Task 8
-
-Write your examples here...
-
-
-## Task 9
-
-
-Write your answer here...
-
-
-## Task 10
-
-Write your answer here...
-
-
-## Task 11
 
 ```{r confidence-interval}
 # Delete this comment and put your code here
@@ -89,7 +64,7 @@ Write your answer here...
 Write your interpretation here...
 
 
-## Task 12
+## Task 7
 
 ```{r prediction-interval}
 # Delete this comment and put your code here
@@ -98,18 +73,15 @@ Write your interpretation here...
 Write your interpretation here...
 
 
-## Task 13
+## Task 8
 
-```{r}
-# Fill in the blank with your scatterplot code
-___ |> 
-  gf_lm(interval = "prediction") |>
-  gf_lm(interval = "confidence", alpha = 0.6)
+```{r plot-pred-intervals}
+# Delete this comment and put your code here
 ```
 
+## Task 9
 
-
-## Task 14
+Write your answer here...
 
 ```{r diagnostics}
 # Delete this comment and put your code here

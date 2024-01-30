@@ -1,13 +1,13 @@
 ---
-title: "Adding Categorical Variables"
+title: "SLR Residual Diagnostics"
 output: pdf_document
 ---
 
 ```{r setup, include=FALSE}
 # Load the required R packages in this setup chunk
+library(mosaic)
 library(ggformula)
 library(car)
-library(ggeffects)
 
 # Load the data sets in the set up chunk
 ```
@@ -17,15 +17,4 @@ library(ggeffects)
 ## Task 2
 
 ## Task 3
-
-## Task 4
-
-## Task 5
-
-## Task 6
-
-## Task 7
-
-## Task 8
-
 

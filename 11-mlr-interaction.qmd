@@ -1,29 +1,29 @@
 ---
 title: "Adding Interaction terms"
 subtitle: "Multiple linear regression -- Stat 230"
+execute: 
+  eval: true
+  echo: true
 format:
   pdf:
     geometry:
-      - top=1in
-      - left=1in
-      - right=1in
-      - bottom=1in
+      - margin=0.8in
 ---
 
 ```{r setup}
 #| include: false
 library(ggformula)
 library(car)
-library(broom)
-library(dplyr)
-library(GGally)
 library(mosaic)
+library(ggeffects)
 
 task <- 0
 ```
 
+\vspace{-0.5in}
 
 In this class, you will extend the multiple linear regression model to include allow for the slope of one variable to depend on the value of another variable. You will consider how to do this, how to interpret the results, and how to determine whether the addition of an interaction term discernibly improves the model (i.e., explains discernibly more variability in the response).
+
 
 In this activity we will begin by working with the `4_8Cyl` data set described in Sections 3.10. You can load the data with the following code
 
@@ -31,85 +31,103 @@ In this activity we will begin by working with the `4_8Cyl` data set described i
 cars <- read.csv("https://aloy.rbind.io/kuiper_data/4_8Cyl.csv")
 ```
 
-## Fitting an interaction model
+Note that there are only two values of `Cyl` (4 and 8).
 
-**Task `r (task <- task + 1)`.** Fit the following multiple linear regression model and report the fitted regression equation. Is this an example of the parallel line, different slope, or separate line model?
+## Part 1. Thinking geometrically
+
+**Task `r (task <- task + 1)`.** Based on the below equation, write down (by hand is fine) the regression equation for 4-cylinder engines and for 8-cylinder engines. Is this an example of the parallel lines, different slopes, or separate lines model?
 
 $\mu(\mathtt{Price} | \mathtt{Mileage}, \mathtt{Cyl}) = \beta_0 + \beta_1 \mathtt{Mileage} + \beta_2 \mathtt{Cyl}$
 
-```{r}
-#| include: false
-cars_lm1 <- lm(Price ~ Mileage + Cyl, data = cars)
-```
+\vfill
 
-\bigskip
+**Task `r (task <- task + 1)`.**  Based on the below equation, write down (by hand is fine) the regression equation for 4-cylinder engines and for 8-cylinder engines. Is this an example of the parallel lines, different slopes, or separate lines model?
 
-**Task `r (task <- task + 1)`.**  Fit the following multiple linear regression model and report the fitted regression equation. Is this an example of the parallel line, different slope, or separate line model?
+$\mu(\mathtt{Price} | \mathtt{Mileage}, \mathtt{Cyl}) = \beta_0 + \beta_1 \mathtt{Mileage} + \beta_2 \mathtt{Cyl} + \beta_3\mathtt{Mileage} \times  \mathtt{Cyl}$
+
+\vfill
+
+\clearpage
+
+## Part 2. Fitting an interaction model
+
+:::{.callout-note}
+# Interaction terms in R
+
+To add interaction terms in R you multiply the terms together in the model formula. For example, the above model formula would is `Price ~ Mileage + Cyl + Mileage:Cyl`.
+
+<br>
+
+Additionally, R follows the conventional modeling advice to always include the main effects for all variables in an interaction term. Thus, `Price ~ Mileage*Cyl` implements the same model ad the previous formula.
+
+:::
+
+**Task `r (task <- task + 1)`.**  Fit the following multiple linear regression model and report the fitted regression equation. 
 
 $\mu(\mathtt{Price} | \mathtt{Mileage}, \mathtt{Cyl}) = \beta_0 + \beta_1 \mathtt{Mileage} + \beta_2 \mathtt{Cyl} + \beta_3\mathtt{Mileage} \times  \mathtt{Cyl}$
 
 ```{r}
 #| include: false
 cars_lm2 <- lm(Price ~ Mileage * Cyl, data = cars)
+cars_lm1 <- update(cars_lm2, . ~ . - Mileage:Cyl)
 ```
+
+
+\vspace{0.75in}
+
+
+**Task `r (task <- task + 1)`.** Assuming `Mileage` = 10000, explain how increasing from four to eight cylinders will impact the estimated price.
+
+
+\vfill
 
 :::{.callout-note}
-# Interaction terms in R
-
-To add interaction terms in R you multiply the terms together in the model formula. For example, the above model formula would is `Price ~ Mileage + Cyl + Mileage*Cyl`.<br>
-
-Additionally, R follows the conventional modeling advice to always include the main effects for all variables in an interaction term. Thus, `Price ~ Mileage*Cyl` implements the same model ad the previous formula.
-
-
-:::
-\bigskip
-
-
-**Task `r (task <- task + 1)`.** For both models, calculate the estimated price of a four-cylinder car with `Mileage` = 10000.
-
-```{r}
-#| include: false
-predict(cars_lm1, newdata = data.frame(Mileage = 10000, Cyl=4))
-predict(cars_lm2, newdata = data.frame(Mileage = 10000, Cyl=4))
-```
-
-
-\bigskip
-
-**Task `r (task <- task + 1)`.** Assuming `Mileage` = 10000, for both models explain how increasing from four to eight cylinders will impact the estimated price.
-
-
-\bigskip
-
 ## Plotting an interaction model
 
-**Task `r (task <- task + 1)`.** Last class we used `plotModel()` to plot the fitted model with categorical variables, but we saw that it was rather restrictive and error prone. Today, we'll use an alternative approach.
+Last class we used the `ggpredict()` and `plot()` command from the `{ggeffects}` R package to plot the parallel lines model. The syntax for `ggpredict()` is shown below. Remember that you need to pass in a fitted mode (`fm`) and specify what terms you want represented in the plot. Here, you need to select the term you will plot on the x-axis as well as any terms involved in adjusting the slope and intercept (i.e., include categorical variables and those involved in interactions).
 
-* First, we'll create a function in R to represent the mean function of the regression model.
-* Then, we'll use our standard plotting functions from {ggformula} to create the plot. 
+```{r}
+#| eval: false
+fm_preds <- ggpredict(fm, terms = c("x1", "x2"))
+```
+
+Then, you can just run `plot(fm_preds)` to visually display the model. If you want to display the points as well as the fitted regression lines, add the argument `show_data = TRUE` to the `plot()` command.
+
+<br>
+
+**Setting values to display**.
+Sometimes `ggpredict()` will select too many levels for the plot (i.e., will display too many lines) to be interpretable, or will choose unimportant values of `x2` to plot. To specify the specific values of the `x2` variable use to form the lines, you can adjust the syntax to 
+
+```{r}
+#| eval: false
+fm_preds <- ggpredict(fm, terms = c("x1", "x2[a, b, c]"))
+```
+
+Where the values inside the `[]` specify the specific values of `x2` to use.
+:::
+
+\clearpage
+
+**Task `r (task <- task + 1)`.** Use the `ggpredict()` and `plot()` functions to plot the fitted interaction model.
+
 
 ```{r}
 #| error: false
 #| eval: false
-model1 <- makeFun(___) # fill in blank with Task 1 model
-gf_point(Price ~ Mileage, color = ~factor(Cyl), data = cars) |>
-  gf_function(model1, args = list(Cyl = 4), color = ~"4") |>
-  gf_function(model1, args = list(Cyl = 5), color = ~"8")
+fm_preds <- ggpredict(fm, terms = c("Mileage", "Cyl"))
+plot(fm_preds, show_data = TRUE)
 ```
 
-Notice that we add two layers to our plot via `gf_function`: one for each line. In order to draw a fitted multiple linear regression model in two dimensions, you need to set the values of the predictor variables that are *not* on the $x$-axis. Here, we set `Cyl = 4` in the first layer by passing `args` a list of the variable name and value pairs. Further, we map the line color to the level of `Cyl`. 
-
-Use the above plotting code to plot the fitted models from Tasks 1 and 2.
 
 \bigskip
 
-**Task `r (task <- task + 1)`.** For each model, write the fitted model equation for each group. In other words, write down equations for the lines you just plotted in the previous task. 
+**Task `r (task <- task + 1)`.** Write the fitted model equation for each `Cyl` group. In other words, write down equations for the lines you just plotted in the previous task. 
 
-\bigskip
+\vspace{1.5in}
 
 ## Do we need the interaction?
 
-**Task `r (task <- task + 1)`.** Conduct an extra sums of squares F-test  to determine if the interaction term discernibly improves the model.
+**Task `r (task <- task + 1)`.** Conduct an appropriate hypothesis test to determine if the interaction term discernibly improves the model. (You can report the hypotheses, test statistic, degrees of freedom, and p-value by hand.)
 
 
 

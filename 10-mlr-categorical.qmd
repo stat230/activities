@@ -4,10 +4,7 @@ subtitle: "Multiple linear regression -- Stat 230"
 format:
   pdf:
     geometry:
-      - top=1in
-      - left=1in
-      - right=1in
-      - bottom=1in
+      - margin=0.9in
 ---
 
 ```{r setup}
@@ -18,10 +15,12 @@ library(broom)
 library(dplyr)
 library(GGally)
 library(mosaic)
+library(ggeffects)
 
 task <- 0
 ```
 
+\vspace{-0.5in}
 
 In this class, you will extend the multiple linear regression model to include categorical variables. You will consider how to do this, how to interpret the results, and how to determine whether the addition of a categorical variable discernibly improves the model (i.e., explains discernibly more variability in the response).
 
@@ -47,11 +46,11 @@ gf_boxplot(log(Price) ~ Model, data = cars) + coord_flip()
 
 \bigskip
 
-**Task `r (task <- task + 1)`.** (Adaptation of Activity 18) Create five indicator variables that can be used to represent the six possible values of `Make` (Buick, Cadillac, Chevrolet, Pontiac, SAAB, Saturn). To answer this, just describe *how* you would define them.
+**Task `r (task <- task + 1)`.** (Adaptation of Activity 18) Create five indicator variables that can be used to represent the six possible values of `Make` (Buick, Cadillac, Chevrolet, Pontiac, SAAB, Saturn). To answer this, just describe *how* you would define them, there is nothing you need to compute in R.
 
 \bigskip
 
-**Task `r (task <- task + 1)`.** (Adaptation of Activity 19) Build (i.e., fit) a multiple regression model using `log(Price)` as the response, and `Mileage` and the indicator variables for `Make`. To do this, you can simply add `Make` into the `lm()` statements we saw last class. R will automatically convert a categorical explanatory variable into a set of indicator variables. Report the fitted regression equation and the $R^2$ value. Which level of `Make` is the baseline (i.e., is represented by 0's across all other indicator variables).
+**Task `r (task <- task + 1)`.** (Adaptation of Activity 19) Build (fit) a multiple regression model using `log(Price)` as the response, and `Mileage` and the indicator variables for `Make`. To do this, you can simply add `Make` into the `lm()` statements we saw last class. R will automatically convert a categorical explanatory variable into a set of indicator variables. Report the fitted regression equation and the $R^2$ value. Which level of `Make` is the baseline? The baseline level is represented by 0's across all of the indicator variables.
 
 ```{r}
 #| include: false
@@ -60,27 +59,44 @@ cars_lm <- lm(log(Price) ~ Mileage + Make, data = cars)
 
 \bigskip
 
-**Task `r (task <- task + 1)`.** The inclusion of `Make` allows each `Make` to have a different y-intercept but a common slope. Write the fitted regression equation for each `Make` (you will have six equations in total).
+**Task `r (task <- task + 1)`.** The inclusion of `Make` in the regression model allows each `Make` to have a different y-intercept but a common slope. Write the fitted regression equation for each `Make` (you will have six equations in total, all with the same slope). You can do this by hand if it takes a lot of time to type it in R Markdown.
 
 \bigskip
 
-**Task `r (task <- task + 1)`.** Now, let's plot the fitted "parallel slopes" model that you just wrote out. To do this, we can use the `plotModel()` function in the {mosaic} package. Use this plot to verify your work in the previous task.
+**Task `r (task <- task + 1)`.** Now, let's plot the fitted "parallel slopes" model that you just wrote out. To do this, we can use the `ggpredict()` and `plot()` functions in the {ggeffects} package. Use this plot to verify your work in the previous task.
 
 ```{r}
 #| eval: false
-# Replace the ___ with the name of your fitted model
-# Be sure to load mosaic in the setup chunk!
-plotModel(___)
+# Be sure to load ggeffects in the setup chunk!
+
+# First, make predictions from the model
+# Fill in the blank with your model name
+cars_pred <- ggpredict(___, terms = ~Mileage + Make)
+
+# Now plot the predictions
+plot(cars_pred)
 ```
 
-:::{.callout-warning}
-If you transform the response variable you will get an error. To avoid this, you can
-create a new column in the data set for the transformed response and then refit your regression model. In this example, we do the following:
+```{r}
+#| include: false
+cars_lm <- lm(log(Price) ~ Mileage + Make + Type, data = cars)
+cars_pred <- ggpredict(cars_lm, terms = ~Mileage + Make)
+```
 
-```{r eval=FALSE}
-cars$logprice <- log(cars$Price)
-cars_lm2 <- lm(logprice ~ Mileage + Make, data = cars)
-plotModel(cars_lm2)
+:::{.callout-note}
+# Tips on plotting the model
+
+## Holding other variables at "typical" values
+If you have more predictor variables in your model, then variables not specified in the `terms` argument the `ggpredict()` function are set to a specific value. Quantitative variables are set to their mean. Categorical variables are set to the mode (the level with the most observations).
+
+## Labels
+If you need to adjust your axis labels or title, then you will need to add a `labs()` layer to your plot. For example,
+
+```{r}
+#| eval: false
+plot(cars_pred) +
+  labs(x = "My new x label", y = "My new y label",
+       title = "My new title")
 ```
 
 :::
@@ -107,9 +123,10 @@ To run an extra sums of squares F-test, you can fit the `full` and `reduced` mod
 #| eval: false
 anova(reduced, full)
 ```
-One thing to note is that R reports the SSE (which is labels `RSS`) for each model, not the SSR. Why? It turns out that the extra sums of squares F-test has two equivalent formulas: one in terms of the increase in explained variability (SSR), and the other in terms of the decreases in unexplained variability (SSE). 
-$$F = \frac{(\text{SSR}_{full} - \text{SSR}_{reduced}) / (\text{df}_{full} - \text{df}_{reduced})}{\text{MSE}_{full}} = \frac{(\text{SSE}_{reduced} - \text{SSE}_{full}) / (\text{df}_{reduced} - \text{df}_{full})}{\text{MSE}_{full}}$$
-R chooses the the version subtracting SSE in the numerator.
+One thing to note is that R reports the SSE (which it labels `RSS`) for each model, not the SSR. 
+<!-- Why? It turns out that the extra sums of squares F-test has two equivalent formulas: one in terms of the increase in explained variability (SSR), and the other in terms of the decreases in unexplained variability (SSE).  -->
+<!-- $$F = \frac{(\text{SSR}_{full} - \text{SSR}_{reduced}) / (\text{df}_{full} - \text{df}_{reduced})}{\text{MSE}_{full}} = \frac{(\text{SSE}_{reduced} - \text{SSE}_{full}) / (\text{df}_{reduced} - \text{df}_{full})}{\text{MSE}_{full}}$$ -->
+<!-- R chooses the the version subtracting SSE in the numerator. -->
 :::
 
 \bigskip

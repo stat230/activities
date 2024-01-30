@@ -1,13 +1,13 @@
 ---
-title: "SLR Diagnostics and Transformations"
-date: "2022-09-30"
-output: html_document
+title: "SLR Influence Diagnostics"
+output: pdf_document
 ---
 
 ```{r setup, include=FALSE}
 # Load the required R packages in this setup chunk
 library(mosaic)
 library(ggformula)
+library(car)
 
 # Load the data sets in the set up chunk
 ```
@@ -28,10 +28,3 @@ library(ggformula)
 
 ## Task 8
 
-## Task 9
-
-## Task 10
-
-## Task 11
-
-## Task 12
